@@ -9,7 +9,6 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
   serviceAccount = require('./extensions/user-permissions/firebase-service-account.json');
 }
 
-const serviceAccount = require('./extensions/user-permissions/firebase-service-account.json');
 const { sendDynamicTemplateEmail, blocksToHtml } = require('./extensions/notifications/services/sendgrid');
 const { resolveRecipientsByNotify } = require('./extensions/notifications/services/recipients');
 
