@@ -1,6 +1,14 @@
 'use strict';
 
 const admin = require('firebase-admin');
+
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+} else {
+  serviceAccount = require('./extensions/user-permissions/firebase-service-account.json');
+}
+
 const serviceAccount = require('./extensions/user-permissions/firebase-service-account.json');
 const { sendDynamicTemplateEmail, blocksToHtml } = require('./extensions/notifications/services/sendgrid');
 const { resolveRecipientsByNotify } = require('./extensions/notifications/services/recipients');
