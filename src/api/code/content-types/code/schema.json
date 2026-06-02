@@ -1,0 +1,115 @@
+{
+  "kind": "collectionType",
+  "collectionName": "codes",
+  "info": {
+    "singularName": "code",
+    "pluralName": "codes",
+    "displayName": "Code",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "code": {
+      "type": "string"
+    },
+    "desc_en": {
+      "type": "text"
+    },
+    "desc_sp": {
+      "type": "text"
+    },
+    "parent": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "codes"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "codes"
+    },
+    "classification": {
+      "type": "string"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tradeshow.tradeshow",
+      "mappedBy": "codes"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "codes"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "codes"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "mappedBy": "codes"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "mappedBy": "codes"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "codes"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "codes"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "mappedBy": "codes"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "codes"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "mappedBy": "codes"
+    },
+    "im_service_requests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::iminterest.iminterest",
+      "mappedBy": "codes"
+    }
+  }
+}

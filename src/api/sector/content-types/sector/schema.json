@@ -1,0 +1,109 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sectors",
+  "info": {
+    "singularName": "sector",
+    "pluralName": "sectors",
+    "displayName": "Sector",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::commission.commission",
+      "mappedBy": "sector"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "mappedBy": "sectors"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "Banguat",
+        "Agexport",
+        "EBOPS"
+      ]
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "sectors"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tradeshow.tradeshow",
+      "mappedBy": "sectors"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Productos",
+        "Servicios"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "sectors"
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::entity.entity",
+      "mappedBy": "sectors"
+    },
+    "crmName": {
+      "type": "string"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "mappedBy": "sectors"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "sectors"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "sectors"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "mappedBy": "sectors"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "sectors"
+    },
+    "services": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::service.service",
+      "mappedBy": "sectors"
+    }
+  }
+}

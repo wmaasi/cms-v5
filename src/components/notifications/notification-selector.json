@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_notifications_notification_selectors",
+  "info": {
+    "displayName": "Notification Selector",
+    "icon": "envelop"
+  },
+  "options": {},
+  "attributes": {
+    "kind": {
+      "type": "enumeration",
+      "enum": [
+        "sector",
+        "commission",
+        "committee",
+        "user_tags"
+      ],
+      "required": true
+    }
+  }
+}

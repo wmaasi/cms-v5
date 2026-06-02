@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "licenses",
+  "info": {
+    "singularName": "license",
+    "pluralName": "licenses",
+    "displayName": "License",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "integer"
+    },
+    "description": {
+      "type": "string"
+    },
+    "restrictedFeatures": {
+      "type": "enumeration",
+      "enum": [
+        "feature1",
+        "feature2",
+        "feature3"
+      ]
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::entity.entity",
+      "mappedBy": "license"
+    }
+  }
+}

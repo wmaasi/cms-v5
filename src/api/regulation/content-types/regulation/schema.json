@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "regulations",
+  "info": {
+    "singularName": "regulation",
+    "pluralName": "regulations",
+    "displayName": "Regulation",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "regulations"
+    },
+    "content": {
+      "type": "blocks"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Requisitos Legales Obligatorios",
+        "Requisitos de Mercado Obligatorios",
+        "Estándares Voluntarios"
+      ]
+    }
+  }
+}

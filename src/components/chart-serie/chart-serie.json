@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_chart_serie_chart_series",
+  "info": {
+    "displayName": "chart_serie",
+    "icon": "chartCircle",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "chart-item.chart-item"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Agexport Service",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Inteligencia",
+        "Negocios"
+      ]
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "notificationEmail": {
+      "type": "email"
+    },
+    "price": {
+      "type": "string"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "services"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "services"
+    },
+    "entity_types": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::entity-type.entity-type",
+      "inversedBy": "agexport_services"
+    },
+    "im_service_requests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::iminterest.iminterest",
+      "mappedBy": "agexport_service"
+    }
+  }
+}

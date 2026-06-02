@@ -1,0 +1,109 @@
+{
+  "kind": "collectionType",
+  "collectionName": "countries",
+  "info": {
+    "singularName": "country",
+    "pluralName": "countries",
+    "displayName": "Country",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "code": {
+      "type": "string"
+    },
+    "alpha2": {
+      "type": "string"
+    },
+    "alpha3": {
+      "type": "string"
+    },
+    "name_en": {
+      "type": "string"
+    },
+    "name_sp": {
+      "type": "string"
+    },
+    "name_bg": {
+      "type": "string"
+    },
+    "iso": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::tradeshow.tradeshow",
+      "mappedBy": "country"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "inversedBy": "countries"
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::entity.entity",
+      "mappedBy": "country"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "mappedBy": "countries"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "countries"
+    },
+    "regions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::region.region",
+      "inversedBy": "countries"
+    },
+    "continents": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::continent.continent",
+      "inversedBy": "countries"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "countries"
+    },
+    "url_flag": {
+      "type": "string"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "countries"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "mappedBy": "countries"
+    },
+    "im_service_requests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::iminterest.iminterest",
+      "mappedBy": "countries"
+    }
+  }
+}

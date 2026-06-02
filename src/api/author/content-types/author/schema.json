@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "authors",
+  "info": {
+    "singularName": "author",
+    "pluralName": "authors",
+    "displayName": "Author",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "authors"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "author"
+    }
+  }
+}

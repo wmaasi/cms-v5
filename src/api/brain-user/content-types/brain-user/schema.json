@@ -1,0 +1,127 @@
+{
+  "kind": "collectionType",
+  "collectionName": "brain_users",
+  "info": {
+    "singularName": "brain-user",
+    "pluralName": "brain-users",
+    "displayName": "brainUser",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "position": {
+      "type": "string"
+    },
+    "uid": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "entity": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::entity.entity",
+      "inversedBy": "brain_users"
+    },
+    "password": {
+      "type": "string",
+      "private": true
+    },
+    "interest": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::interest.interest",
+      "mappedBy": "brain_user"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "inversedBy": "brain_users"
+    },
+    "continents": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::continent.continent",
+      "inversedBy": "brain_users"
+    },
+    "regions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::region.region",
+      "inversedBy": "brain_users"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "brain_users"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "brain_users"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "brain_users"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "inversedBy": "brain_users"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "inversedBy": "brain_users"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "brain_users"
+    },
+    "notifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "brain_user"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "phone": {
+      "type": "string"
+    },
+    "im_service_requests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::iminterest.iminterest",
+      "mappedBy": "brain_user"
+    }
+  }
+}

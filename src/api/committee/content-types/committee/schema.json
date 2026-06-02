@@ -1,0 +1,103 @@
+{
+  "kind": "collectionType",
+  "collectionName": "committees",
+  "info": {
+    "singularName": "committee",
+    "pluralName": "committees",
+    "displayName": "Committee",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "commission": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::commission.commission",
+      "inversedBy": "committees"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "committees"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "inversedBy": "committees"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tradeshow.tradeshow",
+      "inversedBy": "committees"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "Agexport",
+        "Banguat",
+        "EBOPS"
+      ]
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Productos",
+        "Servicios"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "committees"
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::entity.entity",
+      "inversedBy": "committees"
+    },
+    "crmName": {
+      "type": "string"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::subcommittee.subcommittee",
+      "mappedBy": "committee"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "committees"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "committees"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "committees"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "mappedBy": "committees"
+    }
+  }
+}

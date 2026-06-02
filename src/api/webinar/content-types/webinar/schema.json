@@ -1,0 +1,128 @@
+{
+  "kind": "collectionType",
+  "collectionName": "webinars",
+  "info": {
+    "singularName": "webinar",
+    "pluralName": "webinars",
+    "displayName": "webinar",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "organizer": {
+      "type": "string"
+    },
+    "speaker": {
+      "type": "string"
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "signup_url": {
+      "type": "string"
+    },
+    "event_date": {
+      "type": "date"
+    },
+    "event_start_time": {
+      "type": "time"
+    },
+    "event_end_time": {
+      "type": "time"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "content": {
+      "type": "blocks"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "inversedBy": "webinars"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "webinars"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "webinars"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "webinars"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "inversedBy": "webinars"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "webinars"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "inversedBy": "webinars"
+    },
+    "notify": {
+      "type": "component",
+      "repeatable": false,
+      "component": "notifications.notification-selector"
+    },
+    "notificationMode": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "test",
+        "normal",
+        "both"
+      ]
+    },
+    "notificationTestEmail": {
+      "type": "email"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "webinars"
+    },
+    "interests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::interest.interest",
+      "mappedBy": "webinars"
+    }
+  }
+}

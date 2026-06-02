@@ -1,0 +1,176 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tradeshows",
+  "info": {
+    "singularName": "tradeshow",
+    "pluralName": "tradeshows",
+    "displayName": "Tradeshow",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "date_start": {
+      "type": "date"
+    },
+    "date_end": {
+      "type": "date"
+    },
+    "location": {
+      "type": "string"
+    },
+    "country": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::country.country",
+      "inversedBy": "tradeshows"
+    },
+    "city": {
+      "type": "string"
+    },
+    "webpage": {
+      "type": "string"
+    },
+    "organizers": {
+      "type": "string"
+    },
+    "edition": {
+      "type": "string"
+    },
+    "floorsize": {
+      "type": "string"
+    },
+    "qty_stands": {
+      "type": "integer"
+    },
+    "expected_visitors": {
+      "type": "integer"
+    },
+    "frequency": {
+      "type": "enumeration",
+      "enum": [
+        "Anual",
+        "Mensual",
+        "Cada 2 años",
+        "Cada 3 años"
+      ]
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "Presencial",
+        "Virtual"
+      ]
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "activities": {
+      "type": "blocks"
+    },
+    "statistic_info": {
+      "type": "blocks"
+    },
+    "benefits": {
+      "type": "blocks"
+    },
+    "reference": {
+      "type": "blocks"
+    },
+    "contact": {
+      "type": "blocks"
+    },
+    "related_documents": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "tradeshows"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "tradeshows"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "tradeshows"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "tradeshows"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "mappedBy": "tradeshows"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "mappedBy": "tradeshows"
+    },
+    "notify": {
+      "type": "component",
+      "repeatable": true,
+      "component": "notifications.notification-selector"
+    },
+    "notificationMode": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "test",
+        "normal",
+        "both"
+      ]
+    },
+    "notificationTestEmail": {
+      "type": "email"
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::entity.entity",
+      "mappedBy": "tradeshows"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "mappedBy": "tradeshows"
+    }
+  }
+}

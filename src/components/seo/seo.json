@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_seo_seos",
+  "info": {
+    "displayName": "Seo",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "metaTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "string"
+    },
+    "sharedImage": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

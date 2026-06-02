@@ -1,0 +1,115 @@
+{
+  "kind": "collectionType",
+  "collectionName": "commissions",
+  "info": {
+    "singularName": "commission",
+    "pluralName": "commissions",
+    "displayName": "Commission",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sector.sector",
+      "inversedBy": "commissions"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "mappedBy": "commissions"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "commissions"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tradeshow.tradeshow",
+      "mappedBy": "commissions"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "Agexport",
+        "Banguat",
+        "EBOPS"
+      ]
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Productos",
+        "Servicios"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "commissions"
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::entity.entity",
+      "mappedBy": "commissions"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::committee.committee",
+      "mappedBy": "commission"
+    },
+    "crmName": {
+      "type": "string"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "mappedBy": "commissions"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "commissions"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "commissions"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "mappedBy": "commissions"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "mappedBy": "commissions"
+    },
+    "services": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::service.service",
+      "mappedBy": "commissions"
+    }
+  }
+}

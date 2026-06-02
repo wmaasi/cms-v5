@@ -1,0 +1,131 @@
+{
+  "kind": "collectionType",
+  "collectionName": "buyers",
+  "info": {
+    "singularName": "buyer",
+    "pluralName": "buyers",
+    "displayName": "Buyer",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "commercial_name": {
+      "type": "string"
+    },
+    "legal_name": {
+      "type": "string"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "inversedBy": "buyers"
+    },
+    "address": {
+      "type": "string"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "buyers"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "buyers"
+    },
+    "webpage": {
+      "type": "string"
+    },
+    "buyer_contacts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::buyer-contact.buyer-contact",
+      "mappedBy": "buyer"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "buyer"
+    },
+    "interests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::interest.interest",
+      "mappedBy": "buyer"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tradeshow.tradeshow",
+      "inversedBy": "buyers"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "buyers"
+    },
+    "volume": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "notify": {
+      "type": "component",
+      "repeatable": true,
+      "component": "notifications.notification-selector"
+    },
+    "notificationMode": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "test",
+        "normal",
+        "both"
+      ]
+    },
+    "notificationTestEmail": {
+      "type": "email"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "inversedBy": "buyers"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "inversedBy": "buyers"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "buyers"
+    },
+    "certifications": {
+      "type": "text"
+    }
+  }
+}

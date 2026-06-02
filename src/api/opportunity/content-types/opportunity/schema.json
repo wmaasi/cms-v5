@@ -1,0 +1,129 @@
+{
+  "kind": "collectionType",
+  "collectionName": "opportunities",
+  "info": {
+    "singularName": "opportunity",
+    "pluralName": "opportunities",
+    "displayName": "Opportunity",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "inversedBy": "opportunities"
+    },
+    "date_end": {
+      "type": "date"
+    },
+    "media": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "Active",
+        "Close"
+      ]
+    },
+    "buyer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::buyer.buyer",
+      "inversedBy": "opportunities"
+    },
+    "buyer_contact": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::buyer-contact.buyer-contact",
+      "inversedBy": "opportunities"
+    },
+    "notify": {
+      "type": "component",
+      "repeatable": true,
+      "component": "notifications.notification-selector"
+    },
+    "notificationMode": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "test",
+        "normal",
+        "both"
+      ]
+    },
+    "notificationTestEmail": {
+      "type": "email"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "opportunities"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "inversedBy": "opportunities"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "opportunities"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "opportunities"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "opportunities"
+    },
+    "interests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::interest.interest",
+      "mappedBy": "opportunity"
+    },
+    "volume": {
+      "type": "string"
+    },
+    "certifications": {
+      "type": "text"
+    },
+    "frequency": {
+      "type": "string"
+    },
+    "destination_port": {
+      "type": "string"
+    },
+    "buyer_classification": {
+      "type": "string"
+    }
+  }
+}

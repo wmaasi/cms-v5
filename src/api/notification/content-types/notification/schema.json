@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notifications",
+  "info": {
+    "singularName": "notification",
+    "pluralName": "notifications",
+    "displayName": "Notification"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "blocks"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "New",
+        "Opened",
+        "Closed",
+        "Deleted"
+      ]
+    },
+    "brain_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::brain-user.brain-user",
+      "inversedBy": "notifications"
+    }
+  }
+}

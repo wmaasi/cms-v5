@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "continents",
+  "info": {
+    "singularName": "continent",
+    "pluralName": "continents",
+    "displayName": "Continent"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "continents"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "mappedBy": "continents"
+    }
+  }
+}

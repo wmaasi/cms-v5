@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "buyer_contacts",
+  "info": {
+    "singularName": "buyer-contact",
+    "pluralName": "buyer-contacts",
+    "displayName": "Buyer Contact"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "position": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phoneOffice": {
+      "type": "string"
+    },
+    "phoneMobile": {
+      "type": "string"
+    },
+    "buyer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::buyer.buyer",
+      "inversedBy": "buyer_contacts"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::opportunity.opportunity",
+      "mappedBy": "buyer_contact"
+    }
+  }
+}

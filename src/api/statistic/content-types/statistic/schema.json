@@ -1,0 +1,147 @@
+{
+  "kind": "collectionType",
+  "collectionName": "statistics",
+  "info": {
+    "singularName": "statistic",
+    "pluralName": "statistics",
+    "displayName": "statistic",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "desc": {
+      "type": "blocks"
+    },
+    "content": {
+      "type": "blocks"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "inversedBy": "statistics"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "chart_type": {
+      "type": "enumeration",
+      "enum": [
+        "bar",
+        "line",
+        "pie"
+      ]
+    },
+    "chart_theme": {
+      "type": "enumeration",
+      "enum": [
+        "corporativo",
+        "corporativo_soft",
+        "glass"
+      ]
+    },
+    "chart_series": {
+      "type": "component",
+      "repeatable": true,
+      "component": "chart-serie.chart-serie"
+    },
+    "chartTitle": {
+      "type": "string"
+    },
+    "axisTitleX": {
+      "type": "string"
+    },
+    "axisTitleY": {
+      "type": "string"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "inversedBy": "statistics"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "statistics"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "statistics"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "statistics"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "inversedBy": "statistics"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "inversedBy": "statistics"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "statistics"
+    },
+    "notify": {
+      "type": "component",
+      "repeatable": false,
+      "component": "notifications.notification-selector"
+    },
+    "notificationMode": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "test",
+        "normal",
+        "both"
+      ]
+    },
+    "notificationTestEmail": {
+      "type": "email"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "statistics"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "inversedBy": "statistics"
+    }
+  }
+}

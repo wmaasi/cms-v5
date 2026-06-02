@@ -1,0 +1,171 @@
+{
+  "kind": "collectionType",
+  "collectionName": "docs",
+  "info": {
+    "singularName": "doc",
+    "pluralName": "docs",
+    "displayName": "Doc",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "date_creation": {
+      "type": "date"
+    },
+    "authors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::author.author",
+      "inversedBy": "docs"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Conferencia",
+        "Estadística Independiente",
+        "Estudio de Mercado",
+        "Infografía",
+        "Informe",
+        "Investigación de Mercado",
+        "Ley",
+        "Normas y Regulaciones",
+        "Nota al Comercio",
+        "Noticias",
+        "Reglamento",
+        "Repositorio",
+        "Webinar"
+      ]
+    },
+    "public": {
+      "type": "boolean"
+    },
+    "desc": {
+      "type": "blocks"
+    },
+    "related_documents": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "mappedBy": "docs"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "docs"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "docs"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "docs"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "docs"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "mappedBy": "docs"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "mappedBy": "docs"
+    },
+    "notify": {
+      "type": "component",
+      "repeatable": true,
+      "component": "notifications.notification-selector"
+    },
+    "notificationMode": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "test",
+        "normal",
+        "both"
+      ]
+    },
+    "notificationTestEmail": {
+      "type": "email"
+    },
+    "references": {
+      "type": "blocks"
+    },
+    "content": {
+      "type": "blocks"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "mappedBy": "docs"
+    },
+    "statistics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::statistic.statistic",
+      "inversedBy": "docs"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "docs_relations",
+      "pluginOptions": {
+        "content-manager": {
+          "hidden": true
+        }
+      }
+    },
+    "docs_relations": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "inversedBy": "docs"
+    }
+  }
+}

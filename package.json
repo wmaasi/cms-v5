@@ -1,0 +1,42 @@
+{
+  "name": "cms-v-5",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Strapi application",
+  "scripts": {
+    "build": "strapi build",
+    "console": "strapi console",
+    "deploy": "strapi deploy",
+    "dev": "strapi develop",
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "strapi": "strapi",
+    "upgrade": "npx @strapi/upgrade latest",
+    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^8.3.1",
+    "@sendgrid/mail": "^8.1.6",
+    "@strapi-community/strapi-provider-upload-google-cloud-storage": "^5.0.5",
+    "@strapi/plugin-cloud": "5.46.0",
+    "@strapi/plugin-graphql": "^5.46.0",
+    "@strapi/plugin-users-permissions": "5.46.0",
+    "@strapi/provider-email-sendgrid": "^5.46.0",
+    "@strapi/strapi": "5.46.0",
+    "firebase-admin": "^13.10.0",
+    "mysql2": "3.20.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "strapi-plugin-group-manager": "^1.0.2",
+    "styled-components": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0 <=24.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "e0ba8ffd-9508-4285-91ef-23799646e716",
+    "installId": "ee967cd199a9f8d65e623d5f913c96a8404b2e1dea7b8650077c24666fdedf54"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "kind": "collectionType",
+  "collectionName": "interests",
+  "info": {
+    "singularName": "interest",
+    "pluralName": "interests",
+    "displayName": "BI service request",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Opportunity Info",
+        "Tradeshow Info",
+        "Buyer Info"
+      ]
+    },
+    "opportunity": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::opportunity.opportunity",
+      "inversedBy": "interests"
+    },
+    "buyer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::buyer.buyer",
+      "inversedBy": "interests"
+    },
+    "brain_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::brain-user.brain-user",
+      "inversedBy": "interest"
+    },
+    "entity": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::entity.entity",
+      "inversedBy": "interests"
+    },
+    "comments": {
+      "type": "richtext"
+    },
+    "date_posted": {
+      "type": "date"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "New",
+        "Review",
+        "Done"
+      ]
+    },
+    "channel": {
+      "type": "enumeration",
+      "enum": [
+        "manual",
+        "Brain portal",
+        "Whatsapp",
+        "Campaign"
+      ]
+    },
+    "phone": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "webinars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::webinar.webinar",
+      "inversedBy": "interests"
+    }
+  }
+}

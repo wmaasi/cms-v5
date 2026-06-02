@@ -1,0 +1,135 @@
+{
+  "kind": "collectionType",
+  "collectionName": "entities",
+  "info": {
+    "singularName": "entity",
+    "pluralName": "entities",
+    "displayName": "Entity",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "legal_name": {
+      "type": "string"
+    },
+    "nit": {
+      "type": "string"
+    },
+    "crmCode": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "webpage": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "associated": {
+      "type": "boolean"
+    },
+    "entry_date": {
+      "type": "date"
+    },
+    "desc": {
+      "type": "text"
+    },
+    "country": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::country.country",
+      "inversedBy": "entities"
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "entities"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "inversedBy": "entities"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Asociado",
+        "Alianza",
+        "Academia",
+        "Particular",
+        "No Asociado",
+        "Agexport"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "entities"
+    },
+    "license": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::license.license",
+      "inversedBy": "entities"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "entity"
+    },
+    "licenseStartDate": {
+      "type": "date"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "mappedBy": "entities"
+    },
+    "subcommittees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::subcommittee.subcommittee",
+      "mappedBy": "entities"
+    },
+    "interests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::interest.interest",
+      "mappedBy": "entity"
+    },
+    "tradeshows": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tradeshow.tradeshow",
+      "inversedBy": "entities"
+    },
+    "domains": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::domain.domain",
+      "mappedBy": "entity"
+    },
+    "im_service_requests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::iminterest.iminterest",
+      "mappedBy": "entity"
+    }
+  }
+}

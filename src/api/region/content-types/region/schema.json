@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "regions",
+  "info": {
+    "singularName": "region",
+    "pluralName": "regions",
+    "displayName": "Region"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "brain_users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user.brain-user",
+      "mappedBy": "regions"
+    },
+    "countries": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::country.country",
+      "mappedBy": "regions"
+    }
+  }
+}
