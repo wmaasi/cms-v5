@@ -573,6 +573,7 @@ export interface ApiBrainUserBrainUser extends Struct.CollectionTypeSchema {
       'api::iminterest.iminterest'
     >;
     interest: Schema.Attribute.Relation<'oneToOne', 'api::interest.interest'>;
+    lastName: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
