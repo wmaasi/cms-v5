@@ -60,6 +60,13 @@ async function preloadCatalogs() {
     strapi.documents('api::committee.committee').findMany({   fields: ['id', 'crmName'], limit: 10000 }),
   ]);
 
+  const licenses = await strapi.documents('api::license.license').findMany({
+    fields: ['id', 'documentId'],
+    limit: 10,
+  });
+  const accesoCompleto = licenses.find(l => l.documentId === LICENSE_ACCESO_COMPLETO_DOC_ID);
+  cache.licenseAccesoCompletoId = accesoCompleto ? accesoCompleto.id : null;
+
   for (const r of sectors)     { const k = toUpper(r.crmName); if (k) cache.sectorByCrm.set(k, r.id); }
   for (const r of commissions) { const k = toUpper(r.crmName); if (k) cache.commissionByCrm.set(k, r.id); }
   for (const r of committees)  { const k = toUpper(r.crmName); if (k) cache.committeeByCrm.set(k, r.id); }
@@ -248,7 +255,7 @@ module.exports = async () => {
         commissions: commissionIds,
         committees:  committeeIds,
         type:    'Asociado',
-        license: LICENSE_ACCESO_COMPLETO_DOC_ID,
+        license: cache.licenseAccesoCompletoId,
       };
 
       // --- Excepción: registros con tratamiento especial ---
