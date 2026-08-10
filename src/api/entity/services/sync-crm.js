@@ -18,6 +18,22 @@ const toDateStr = (v) => {
   try { return new Date(v).toISOString().split('T')[0]; } catch { return null; }
 };
 
+/** Aliases: nombre que viene del CRM -> nombre en Strapi (name_sp) **/
+const COUNTRY_ALIASES = {
+  'HOLANDA': 'PAÍSES BAJOS',
+};
+
+/** Excepción: registros con tratamiento especial (por crmCode o nit) **/
+const SPECIAL_RECORDS = {
+  'EMP-0001623': { associated: false, type: 'Agexport' },
+};
+const SPECIAL_NITS = {
+  '516348-K': { associated: false, type: 'Agexport' },
+};
+
+/** ID de la licencia "Acceso Completo 365" en Strapi **/
+const LICENSE_ACCESO_COMPLETO_DOC_ID = '3e7fc04f-9ab8-4065-9fad-25cc75723df2';
+
 /** Caches precargados **/
 const cache = {
   countryByNameSp: new Map(),
@@ -57,7 +73,7 @@ async function preloadEntities() {
   while (true) {
     const batch = await strapi.documents('api::entity.entity').findMany({
       fields: ['id', 'documentId', 'nit', 'crmCode', 'name', 'legal_name', 'phone', 'email',
-               'webpage', 'address', 'associated', 'entry_date', 'desc'],
+               'webpage', 'address', 'associated', 'entry_date', 'desc', 'type'],
       populate: {
         country:     { fields: ['id'] },
         sectors:     { fields: ['id'] },
@@ -87,7 +103,7 @@ async function preloadEntities() {
 /** Compara si los datos de Gold son distintos al registro en Strapi **/
 function hasChanged(existing, data) {
   const plainFields = ['name', 'legal_name', 'nit', 'crmCode', 'phone', 'email',
-                       'webpage', 'address', 'associated', 'desc'];
+                       'webpage', 'address', 'associated', 'desc', 'type'];
   for (const field of plainFields) {
     const a = existing[field] ?? null;
     const b = data[field] ?? null;
@@ -113,7 +129,8 @@ function hasChanged(existing, data) {
 
 /** Resuelve el ID de país desde el nombre en Gold **/
 async function resolveCountryId(paisName) {
-  const key = toUpper(cleanStr(paisName));
+  let key = toUpper(cleanStr(paisName));
+  if (key && COUNTRY_ALIASES[key]) key = COUNTRY_ALIASES[key];
   return key ? (cache.countryByNameSp.get(key) || null) : null;
 }
 
@@ -213,7 +230,7 @@ module.exports = async () => {
         strapi.log.warn(`[SYNC CRM] Committee no encontrado: "${e.comite}"`);
       }
 
-      // --- Payload ---
+      // --- Payload base ---
       const data = {
         name,
         legal_name,
@@ -230,9 +247,19 @@ module.exports = async () => {
         sectors:     sectorIds,
         commissions: commissionIds,
         committees:  committeeIds,
-        type: 'Asociado',
-        licencse: 1,
+        type:    'Asociado',
+        license: LICENSE_ACCESO_COMPLETO_DOC_ID,
       };
+
+      // --- Excepción: registros con tratamiento especial ---
+      const special = (crmCode && SPECIAL_RECORDS[crmCode])
+                   || (nit     && SPECIAL_NITS[nit])
+                   || null;
+
+      if (special) {
+        Object.assign(data, special);
+        strapi.log.info(`[SYNC CRM] Excepción aplicada a "${name}" (crmCode=${crmCode}, nit=${nit}): ${JSON.stringify(special)}`);
+      }
 
       // --- Buscar en cache ---
       const existing = (nit     && cache.entityByNit.get(toUpper(nit)))
@@ -242,30 +269,39 @@ module.exports = async () => {
       if (existing) {
         seenDocumentIds.add(existing.documentId);
         if (hasChanged(existing, data)) {
-          await strapi.documents('api::entity.entity').update({
-            documentId: existing.documentId,
-            data,
-          });
-          await strapi.documents('api::entity.entity').publish({
-            documentId: existing.documentId,
-          });
-          updated++;
+          try {
+            await strapi.documents('api::entity.entity').update({
+              documentId: existing.documentId,
+              data,
+            });
+            await strapi.documents('api::entity.entity').publish({
+              documentId: existing.documentId,
+            });
+            updated++;
+          } catch (entErr) {
+            strapi.log.error(`[SYNC CRM] Error actualizando "${name}" (nit=${nit}, crmCode=${crmCode}): ${entErr?.message || entErr}`);
+            skipped++;
+            continue;
+          }
         } else {
           unchanged++;
         }
       } else {
-        const created_entity = await strapi.documents('api::entity.entity').create({
-          data: {
-            ...data,
-            publishedAt: new Date().toISOString(), // publicar directamente
-          },
-        });
-        seenDocumentIds.add(created_entity.documentId);
-        if (nit)     cache.entityByNit.set(toUpper(nit), created_entity);
-        if (crmCode) cache.entityByCrmCode.set(toUpper(crmCode), created_entity);
-        created++;
+        try {
+          const created_entity = await strapi.documents('api::entity.entity').create({ data });
+          await strapi.documents('api::entity.entity').publish({
+            documentId: created_entity.documentId,
+          });
+          seenDocumentIds.add(created_entity.documentId);
+          if (nit)     cache.entityByNit.set(toUpper(nit), created_entity);
+          if (crmCode) cache.entityByCrmCode.set(toUpper(crmCode), created_entity);
+          created++;
+        } catch (entErr) {
+          strapi.log.error(`[SYNC CRM] Error creando "${name}" (nit=${nit}, crmCode=${crmCode}): ${entErr?.message || entErr}`);
+          skipped++;
+          continue;
+        }
       }
-
       if ((updated + created + unchanged) % 100 === 0) {
         strapi.log.info(`[SYNC CRM] Progreso: ${updated + created + unchanged + skipped}/${empresas.length} (updated=${updated}, unchanged=${unchanged}, created=${created})`);
       }
