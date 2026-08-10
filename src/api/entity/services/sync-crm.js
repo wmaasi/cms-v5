@@ -278,11 +278,12 @@ module.exports = async () => {
               documentId: existing.documentId,
             });
             updated++;
-          } catch (entErr) {
-            strapi.log.error(`[SYNC CRM] Error actualizando "${name}" (nit=${nit}, crmCode=${crmCode}): ${entErr?.message || entErr}`);
-            skipped++;
-            continue;
-          }
+            } catch (entErr) {
+              strapi.log.error(`[SYNC CRM] Error actualizando "${name}" (nit=${nit}, crmCode=${crmCode}): ${entErr?.message || entErr}`);
+              strapi.log.error(`[SYNC CRM] Detalle completo: ${JSON.stringify(entErr?.details || entErr, null, 2)}`);
+              skipped++;
+              continue;
+            }
         } else {
           unchanged++;
         }
@@ -296,11 +297,12 @@ module.exports = async () => {
           if (nit)     cache.entityByNit.set(toUpper(nit), created_entity);
           if (crmCode) cache.entityByCrmCode.set(toUpper(crmCode), created_entity);
           created++;
-        } catch (entErr) {
-          strapi.log.error(`[SYNC CRM] Error creando "${name}" (nit=${nit}, crmCode=${crmCode}): ${entErr?.message || entErr}`);
-          skipped++;
-          continue;
-        }
+          } catch (entErr) {
+            strapi.log.error(`[SYNC CRM] Error creando "${name}" (nit=${nit}, crmCode=${crmCode}): ${entErr?.message || entErr}`);
+            strapi.log.error(`[SYNC CRM] Detalle completo: ${JSON.stringify(entErr?.details || entErr, null, 2)}`);
+            skipped++;
+            continue;
+          }
       }
       if ((updated + created + unchanged) % 100 === 0) {
         strapi.log.info(`[SYNC CRM] Progreso: ${updated + created + unchanged + skipped}/${empresas.length} (updated=${updated}, unchanged=${unchanged}, created=${created})`);
