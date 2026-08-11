@@ -9,13 +9,14 @@
     "deploy": "strapi deploy",
     "dev": "strapi develop",
     "develop": "strapi develop",
-    "start": "strapi start",
+    "start": "node bootstrap-secrets.js",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
     "@google-cloud/bigquery": "^8.3.1",
+    "@google-cloud/secret-manager": "^6.3.0",
     "@sendgrid/mail": "^8.1.6",
     "@strapi-community/strapi-provider-upload-google-cloud-storage": "^5.0.5",
     "@strapi/plugin-cloud": "5.46.0",
