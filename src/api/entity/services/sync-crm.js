@@ -33,6 +33,8 @@ const SPECIAL_NITS = {
 
 /** ID de la licencia "Acceso Completo 365" en Strapi **/
 const LICENSE_ACCESO_COMPLETO_DOC_ID = '3e7fc04f-9ab8-4065-9fad-25cc75723df2';
+/** ID de la licencia "Acceso Restringido" en Strapi (usada al des-asociar) **/
+const LICENSE_ACCESO_RESTRINGIDO_DOC_ID = '9d10ec25-eccd-4078-97ea-88dcb969438b';
 
 /** Caches precargados **/
 const cache = {
@@ -64,8 +66,12 @@ async function preloadCatalogs() {
     fields: ['id', 'documentId'],
     limit: 10,
   });
+  
   const accesoCompleto = licenses.find(l => l.documentId === LICENSE_ACCESO_COMPLETO_DOC_ID);
   cache.licenseAccesoCompletoId = accesoCompleto ? accesoCompleto.id : null;
+
+  const accesoRestringido = licenses.find(l => l.documentId === LICENSE_ACCESO_RESTRINGIDO_DOC_ID);
+  cache.licenseAccesoRestringidoId = accesoRestringido ? accesoRestringido.id : null;
 
   for (const r of sectors)     { const k = toUpper(r.crmName); if (k) cache.sectorByCrm.set(k, r.id); }
   for (const r of commissions) { const k = toUpper(r.crmName); if (k) cache.commissionByCrm.set(k, r.id); }
@@ -329,7 +335,7 @@ module.exports = async () => {
             data: {
               associated: false,
               type: 'No Asociado',
-              license: 2,
+              license: cache.licenseAccesoRestringidoId,
             },
           });
           await strapi.documents('api::entity.entity').publish({
