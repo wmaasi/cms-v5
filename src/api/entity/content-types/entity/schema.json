@@ -130,6 +130,12 @@
       "relation": "oneToMany",
       "target": "api::iminterest.iminterest",
       "mappedBy": "entity"
+    },
+    "entity_type": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::entity-type.entity-type",
+      "inversedBy": "entities"
     }
   }
 }

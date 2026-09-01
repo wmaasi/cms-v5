@@ -30,19 +30,16 @@
     "type": {
       "type": "enumeration",
       "enum": [
-        "Conferencia",
+        "Boletines",
         "Estadística Independiente",
-        "Estudio de Mercado",
+        "Estudios y Briefs de Mercado",
         "Infografía",
-        "Informe",
-        "Investigación de Mercado",
         "Ley",
         "Normas y Regulaciones",
         "Nota al Comercio",
         "Noticias",
-        "Reglamento",
-        "Repositorio",
-        "Webinar"
+        "Oportunidades País",
+        "Reglamento"
       ]
     },
     "public": {
@@ -117,8 +114,8 @@
     },
     "notify": {
       "type": "component",
-      "repeatable": true,
-      "component": "notifications.notification-selector"
+      "component": "notifications.notification-selector",
+      "repeatable": true
     },
     "notificationMode": {
       "type": "enumeration",
@@ -154,17 +151,23 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::doc.doc",
-      "mappedBy": "docs_relations",
       "pluginOptions": {
         "content-manager": {
           "hidden": true
         }
-      }
+      },
+      "mappedBy": "docs_relations"
     },
     "docs_relations": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::doc.doc",
+      "inversedBy": "docs"
+    },
+    "entity_types": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::entity-type.entity-type",
       "inversedBy": "docs"
     }
   }

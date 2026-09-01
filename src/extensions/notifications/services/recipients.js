@@ -30,18 +30,17 @@ async function resolveRecipientsByNotify(uid, documentId) {
       commissions: true,
       committees: true,
       tags: true,
+      entity_types: true,
     },
   });
-
   if (!item) return [];
-
   const notifyKinds = (item.notify || []).map((n) => n.kind);
   if (!notifyKinds.length) return [];
-
-  const sectorIds      = (item.sectors     || []).map((s) => s.id);
-  const commissionIds  = (item.commissions || []).map((c) => c.id);
-  const committeeIds   = (item.committees  || []).map((c) => c.id);
-  const tagIds         = (item.tags        || []).map((t) => t.id);
+  const sectorIds      = (item.sectors      || []).map((s) => s.id);
+  const commissionIds  = (item.commissions  || []).map((c) => c.id);
+  const committeeIds   = (item.committees   || []).map((c) => c.id);
+  const tagIds         = (item.tags         || []).map((t) => t.id);
+  const entityTypeIds  = (item.entity_types || []).map((e) => e.id);
 
   const finalBuckets = [];
 
@@ -94,7 +93,23 @@ async function resolveRecipientsByNotify(uid, documentId) {
   }
 
   // ======================================================
-  // 4. NOTIFICAR POR USER TAGS
+  // 4. NOTIFICAR POR ENTITY TYPE
+  // ======================================================
+  if (notifyKinds.includes('entity_type') && entityTypeIds.length > 0) {
+    const users = await strapi.documents('api::brain-user.brain-user').findMany({
+      fields: ['id', 'email'],
+      filters: {
+        entity: {
+          entity_types: { id: { $in: entityTypeIds } },
+        },
+      },
+      limit: 100000,
+    });
+    finalBuckets.push(users);
+  }
+  
+  // ======================================================
+  // 5. NOTIFICAR POR USER TAGS
   // ======================================================
   if (notifyKinds.includes('user_tags') && tagIds.length > 0) {
     const users = await strapi.documents('api::brain-user.brain-user').findMany({

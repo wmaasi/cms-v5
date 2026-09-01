@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "buyer_classifications",
+  "info": {
+    "singularName": "buyer-classification",
+    "pluralName": "buyer-classifications",
+    "displayName": "Buyer Classification"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "buyers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer.buyer",
+      "inversedBy": "buyer_classifications"
+    },
+    "opportunities": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::opportunity.opportunity",
+      "inversedBy": "buyer_classifications"
+    }
+  }
+}

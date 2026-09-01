@@ -44,6 +44,7 @@ const cache = {
   committeeByCrm:  new Map(),
   entityByNit:     new Map(),
   entityByCrmCode: new Map(),
+  entityTypeIdByName: new Map(),
 };
 
 async function preloadCatalogs() {
@@ -76,6 +77,16 @@ async function preloadCatalogs() {
   for (const r of sectors)     { const k = toUpper(r.crmName); if (k) cache.sectorByCrm.set(k, r.id); }
   for (const r of commissions) { const k = toUpper(r.crmName); if (k) cache.commissionByCrm.set(k, r.id); }
   for (const r of committees)  { const k = toUpper(r.crmName); if (k) cache.committeeByCrm.set(k, r.id); }
+
+  const entityTypes = await strapi.documents('api::entity-type.entity-type').findMany({
+    fields: ['id', 'type'],
+    status: 'published',
+    limit: 100,
+  });
+  cache.entityTypeIdByName = new Map();
+  for (const et of entityTypes) {
+    if (et.type) cache.entityTypeIdByName.set(et.type, et.id);
+  }
 }
 
 async function preloadEntities() {
@@ -261,6 +272,7 @@ module.exports = async () => {
         commissions: commissionIds,
         committees:  committeeIds,
         type:    'Asociado',
+        entity_type: cache.entityTypeIdByName.get('Asociado') || null,
         license: cache.licenseAccesoCompletoId,
       };
 
@@ -335,6 +347,7 @@ module.exports = async () => {
             data: {
               associated: false,
               type: 'No Asociado',
+              entity_type: cache.entityTypeIdByName.get('No Asociado') || null,
               license: cache.licenseAccesoRestringidoId,
             },
           });

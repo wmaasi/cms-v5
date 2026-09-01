@@ -36,7 +36,7 @@ export interface NotificationsNotificationSelector
   };
   attributes: {
     kind: Schema.Attribute.Enumeration<
-      ['sector', 'commission', 'committee', 'user_tags']
+      ['sector', 'commission', 'committee', 'user_tags', 'entity_type']
     > &
       Schema.Attribute.Required;
   };

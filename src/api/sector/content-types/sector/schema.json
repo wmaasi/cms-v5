@@ -104,6 +104,24 @@
       "relation": "manyToMany",
       "target": "api::service.service",
       "mappedBy": "sectors"
+    },
+    "news": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::blog.blog",
+      "mappedBy": "sectors"
+    },
+    "regulations": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::regulation.regulation",
+      "mappedBy": "sectors"
+    },
+    "resources": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::resource.resource",
+      "mappedBy": "sectors"
     }
   }
 }

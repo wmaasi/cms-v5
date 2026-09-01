@@ -22,6 +22,18 @@
       "relation": "manyToMany",
       "target": "api::service.service",
       "mappedBy": "entity_types"
+    },
+    "docs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::doc.doc",
+      "mappedBy": "entity_types"
+    },
+    "entities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::entity.entity",
+      "mappedBy": "entity_type"
     }
   }
 }

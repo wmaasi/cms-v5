@@ -516,6 +516,10 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    commissions: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::commission.commission'
+    >;
     content: Schema.Attribute.Blocks;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -526,9 +530,44 @@ export interface ApiBlogBlog extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    sectors: Schema.Attribute.Relation<'manyToMany', 'api::sector.sector'>;
     slug: Schema.Attribute.UID<'title'>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiBrainUserGroupBrainUserGroup
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'brain_user_groups';
+  info: {
+    displayName: 'Custom Code Group';
+    pluralName: 'brain-user-groups';
+    singularName: 'brain-user-group';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    brain_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::brain-user.brain-user'
+    >;
+    codes: Schema.Attribute.Relation<'manyToMany', 'api::code.code'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::brain-user-group.brain-user-group'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -549,6 +588,10 @@ export interface ApiBrainUserBrainUser extends Struct.CollectionTypeSchema {
   attributes: {
     active: Schema.Attribute.Boolean;
     avatar: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    brain_user_groups: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::brain-user-group.brain-user-group'
+    >;
     codes: Schema.Attribute.Relation<'manyToMany', 'api::code.code'>;
     commissions: Schema.Attribute.Relation<
       'manyToMany',
@@ -597,6 +640,41 @@ export interface ApiBrainUserBrainUser extends Struct.CollectionTypeSchema {
     >;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     uid: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiBuyerClassificationBuyerClassification
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'buyer_classifications';
+  info: {
+    displayName: 'Buyer Classification';
+    pluralName: 'buyer-classifications';
+    singularName: 'buyer-classification';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    buyers: Schema.Attribute.Relation<'manyToMany', 'api::buyer.buyer'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::buyer-classification.buyer-classification'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    opportunities: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::opportunity.opportunity'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -654,6 +732,10 @@ export interface ApiBuyerBuyer extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.String;
+    buyer_classifications: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::buyer-classification.buyer-classification'
+    >;
     buyer_contacts: Schema.Attribute.Relation<
       'oneToMany',
       'api::buyer-contact.buyer-contact'
@@ -754,6 +836,10 @@ export interface ApiCodeCode extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    brain_user_groups: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::brain-user-group.brain-user-group'
+    >;
     brain_users: Schema.Attribute.Relation<
       'manyToMany',
       'api::brain-user.brain-user'
@@ -846,11 +932,20 @@ export interface ApiCommissionCommission extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    news: Schema.Attribute.Relation<'manyToMany', 'api::blog.blog'>;
     opportunities: Schema.Attribute.Relation<
       'manyToMany',
       'api::opportunity.opportunity'
     >;
     publishedAt: Schema.Attribute.DateTime;
+    regulations: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::regulation.regulation'
+    >;
+    resources: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::resource.resource'
+    >;
     sector: Schema.Attribute.Relation<'manyToOne', 'api::sector.sector'>;
     services: Schema.Attribute.Relation<'manyToMany', 'api::service.service'>;
     source: Schema.Attribute.Enumeration<['Agexport', 'Banguat', 'EBOPS']>;
@@ -1068,6 +1163,10 @@ export interface ApiDocDoc extends Struct.CollectionTypeSchema {
         };
       }>;
     docs_relations: Schema.Attribute.Relation<'manyToMany', 'api::doc.doc'>;
+    entity_types: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::entity-type.entity-type'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::doc.doc'> &
       Schema.Attribute.Private;
@@ -1099,19 +1198,16 @@ export interface ApiDocDoc extends Struct.CollectionTypeSchema {
     title: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<
       [
-        'Conferencia',
+        'Boletines',
         'Estad\u00EDstica Independiente',
-        'Estudio de Mercado',
+        'Estudios y Briefs de Mercado',
         'Infograf\u00EDa',
-        'Informe',
-        'Investigaci\u00F3n de Mercado',
         'Ley',
         'Normas y Regulaciones',
         'Nota al Comercio',
         'Noticias',
+        'Oportunidades Pa\u00EDs',
         'Reglamento',
-        'Repositorio',
-        'Webinar',
       ]
     >;
     updatedAt: Schema.Attribute.DateTime;
@@ -1170,6 +1266,8 @@ export interface ApiEntityTypeEntityType extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    docs: Schema.Attribute.Relation<'manyToMany', 'api::doc.doc'>;
+    entities: Schema.Attribute.Relation<'oneToMany', 'api::entity.entity'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1218,6 +1316,10 @@ export interface ApiEntityEntity extends Struct.CollectionTypeSchema {
     desc: Schema.Attribute.Text;
     domains: Schema.Attribute.Relation<'oneToMany', 'api::domain.domain'>;
     email: Schema.Attribute.Email;
+    entity_type: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::entity-type.entity-type'
+    >;
     entry_date: Schema.Attribute.Date;
     im_service_requests: Schema.Attribute.Relation<
       'oneToMany',
@@ -1535,7 +1637,10 @@ export interface ApiOpportunityOpportunity extends Struct.CollectionTypeSchema {
   };
   attributes: {
     buyer: Schema.Attribute.Relation<'manyToOne', 'api::buyer.buyer'>;
-    buyer_classification: Schema.Attribute.String;
+    buyer_classifications: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::buyer-classification.buyer-classification'
+    >;
     buyer_contact: Schema.Attribute.Relation<
       'manyToOne',
       'api::buyer-contact.buyer-contact'
@@ -1641,6 +1746,10 @@ export interface ApiRegulationRegulation extends Struct.CollectionTypeSchema {
         'Est\u00E1ndares Voluntarios',
       ]
     >;
+    commissions: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::commission.commission'
+    >;
     content: Schema.Attribute.Blocks;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1654,6 +1763,7 @@ export interface ApiRegulationRegulation extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    sectors: Schema.Attribute.Relation<'manyToMany', 'api::sector.sector'>;
     slug: Schema.Attribute.UID<'title'>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String;
@@ -1682,6 +1792,10 @@ export interface ApiResourceResource extends Struct.CollectionTypeSchema {
         'Fuentes de Consulta Comercio Sostenible',
       ]
     >;
+    commissions: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::commission.commission'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1695,6 +1809,7 @@ export interface ApiResourceResource extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    sectors: Schema.Attribute.Relation<'manyToMany', 'api::sector.sector'>;
     slug: Schema.Attribute.UID<'title'>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String;
@@ -1739,11 +1854,20 @@ export interface ApiSectorSector extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    news: Schema.Attribute.Relation<'manyToMany', 'api::blog.blog'>;
     opportunities: Schema.Attribute.Relation<
       'manyToMany',
       'api::opportunity.opportunity'
     >;
     publishedAt: Schema.Attribute.DateTime;
+    regulations: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::regulation.regulation'
+    >;
+    resources: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::resource.resource'
+    >;
     services: Schema.Attribute.Relation<'manyToMany', 'api::service.service'>;
     source: Schema.Attribute.Enumeration<['Banguat', 'Agexport', 'EBOPS']>;
     statistics: Schema.Attribute.Relation<
@@ -2711,7 +2835,9 @@ declare module '@strapi/strapi' {
       'api::about.about': ApiAboutAbout;
       'api::author.author': ApiAuthorAuthor;
       'api::blog.blog': ApiBlogBlog;
+      'api::brain-user-group.brain-user-group': ApiBrainUserGroupBrainUserGroup;
       'api::brain-user.brain-user': ApiBrainUserBrainUser;
+      'api::buyer-classification.buyer-classification': ApiBuyerClassificationBuyerClassification;
       'api::buyer-contact.buyer-contact': ApiBuyerContactBuyerContact;
       'api::buyer.buyer': ApiBuyerBuyer;
       'api::category.category': ApiCategoryCategory;

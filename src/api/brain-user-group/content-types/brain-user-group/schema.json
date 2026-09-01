@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "brain_user_groups",
+  "info": {
+    "singularName": "brain-user-group",
+    "pluralName": "brain-user-groups",
+    "displayName": "Custom Code Group"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "brain_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::brain-user.brain-user",
+      "inversedBy": "brain_user_groups"
+    },
+    "codes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::code.code",
+      "inversedBy": "brain_user_groups"
+    }
+  }
+}

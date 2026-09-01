@@ -49,6 +49,18 @@
         "Guías y protocolos",
         "Fuentes de Consulta Comercio Sostenible"
       ]
+    },
+    "sectors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sector.sector",
+      "inversedBy": "resources"
+    },
+    "commissions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::commission.commission",
+      "mappedBy": "resources"
     }
   }
 }

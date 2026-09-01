@@ -110,6 +110,12 @@
       "relation": "manyToMany",
       "target": "api::iminterest.iminterest",
       "mappedBy": "codes"
+    },
+    "brain_user_groups": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brain-user-group.brain-user-group",
+      "mappedBy": "codes"
     }
   }
 }

@@ -8,13 +8,14 @@
   "attributes": {
     "kind": {
       "type": "enumeration",
+      "required": true,
       "enum": [
         "sector",
         "commission",
         "committee",
-        "user_tags"
-      ],
-      "required": true
+        "user_tags",
+        "entity_type"
+      ]
     }
   }
 }

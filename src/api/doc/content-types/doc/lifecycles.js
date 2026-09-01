@@ -3,6 +3,17 @@ const { resolveRecipientsByNotify } = require('../../../../extensions/notificati
 const { sendDynamicTemplateEmail, blocksToHtml } = require('../../../../extensions/notifications/services/sendgrid');
 
 module.exports = {
+
+// 1. Añadimos el hook de creación aquí arriba
+  beforeCreate(event) {
+    const { data } = event.params;
+
+    if (!data.date_creation) {
+      // Si el usuario no ingresó una fecha, le asignamos la de hoy (YYYY-MM-DD)
+      data.date_creation = new Date().toISOString().split('T')[0];
+    }
+  },
+
   async afterUpdate(event) {
     const { result, params } = event;
 

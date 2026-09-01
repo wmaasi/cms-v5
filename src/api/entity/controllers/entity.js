@@ -15,6 +15,7 @@ module.exports = createCoreController('api::entity.entity', ({ strapi }) => ({
       }
 
       strapi.log.info('✅ Handler /entity/sync ejecutado');
+      strapi.log.info('test deploy');
 
       // 🔧 Carga manual del servicio
       const syncCrm = require(path.resolve(__dirname, '../services/sync-crm.js'));

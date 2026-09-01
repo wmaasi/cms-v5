@@ -59,8 +59,8 @@
     },
     "notify": {
       "type": "component",
-      "repeatable": true,
-      "component": "notifications.notification-selector"
+      "component": "notifications.notification-selector",
+      "repeatable": true
     },
     "notificationMode": {
       "type": "enumeration",
@@ -122,8 +122,11 @@
     "destination_port": {
       "type": "string"
     },
-    "buyer_classification": {
-      "type": "string"
+    "buyer_classifications": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::buyer-classification.buyer-classification",
+      "mappedBy": "opportunities"
     }
   }
 }
