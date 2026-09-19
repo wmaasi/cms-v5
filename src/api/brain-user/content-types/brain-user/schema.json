@@ -40,9 +40,9 @@
       "type": "string",
       "private": true
     },
-    "interest": {
+    "interests": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::interest.interest",
       "mappedBy": "brain_user"
     },

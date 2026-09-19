@@ -615,7 +615,7 @@ export interface ApiBrainUserBrainUser extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::iminterest.iminterest'
     >;
-    interest: Schema.Attribute.Relation<'oneToOne', 'api::interest.interest'>;
+    interests: Schema.Attribute.Relation<'oneToMany', 'api::interest.interest'>;
     lastName: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1514,7 +1514,7 @@ export interface ApiInterestInterest extends Struct.CollectionTypeSchema {
   };
   attributes: {
     brain_user: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::brain-user.brain-user'
     >;
     buyer: Schema.Attribute.Relation<'manyToOne', 'api::buyer.buyer'>;
@@ -1541,14 +1541,13 @@ export interface ApiInterestInterest extends Struct.CollectionTypeSchema {
     >;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    state: Schema.Attribute.Enumeration<['New', 'Review', 'Done']>;
+    req_status: Schema.Attribute.Enumeration<['New', 'Review', 'Done']>;
     type: Schema.Attribute.Enumeration<
       ['Opportunity Info', 'Tradeshow Info', 'Buyer Info']
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    webinars: Schema.Attribute.Relation<'manyToMany', 'api::webinar.webinar'>;
   };
 }
 
@@ -2238,10 +2237,6 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
     event_date: Schema.Attribute.Date;
     event_end_time: Schema.Attribute.Time;
     event_start_time: Schema.Attribute.Time;
-    interests: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::interest.interest'
-    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

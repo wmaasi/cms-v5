@@ -97,8 +97,8 @@
     },
     "notify": {
       "type": "component",
-      "repeatable": false,
-      "component": "notifications.notification-selector"
+      "component": "notifications.notification-selector",
+      "repeatable": false
     },
     "notificationMode": {
       "type": "enumeration",
@@ -116,12 +116,6 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::statistic.statistic",
-      "mappedBy": "webinars"
-    },
-    "interests": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::interest.interest",
       "mappedBy": "webinars"
     }
   }

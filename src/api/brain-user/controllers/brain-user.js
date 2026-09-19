@@ -28,7 +28,7 @@ module.exports = createCoreController(
         populate: {
           entity: { populate: ['license'] },
           avatar: true,
-          interest: true,
+          interests: true,
           countries: true,
           continents: true,
           regions: true,
