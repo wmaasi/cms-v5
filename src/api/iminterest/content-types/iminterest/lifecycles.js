@@ -1,9 +1,15 @@
 'use strict';
 const { sendDynamicTemplateEmail } = require('../../../../extensions/notifications/services/sendgrid');
+const { alreadyHandled } = require('../../../../extensions/notifications/services/dedupe');
 
 module.exports = {
   async afterCreate(event) {
     const { result } = event;
+
+    if (alreadyHandled(`iminterest:${result.documentId}`)) {
+      strapi.log.info(`iminterest (${result.documentId}): evento duplicado (borrador/publicado), correo omitido.`);
+      return;
+    }
 
     try {
       const iminterest = await strapi.documents('api::iminterest.iminterest').findOne({
@@ -24,8 +30,8 @@ module.exports = {
       }
 
       const fullName = [iminterest.Nombre, iminterest.Apellido].filter(Boolean).join(' ');
-      const countriesList = iminterest.countries?.map(c => c.name).join(', ') || '';
-      const codesList     = iminterest.codes?.map(c => c.name).join(', ')    || '';
+      const countriesList = iminterest.countries?.map(c => c.name_sp || c.name_en).filter(Boolean).join(', ') || '';
+      const codesList     = iminterest.codes?.map(c => c.code).filter(Boolean).join(', ') || '';
 
       const customArgs = {
         system: 'brain',

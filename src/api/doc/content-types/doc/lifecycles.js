@@ -24,11 +24,15 @@ module.exports = {
 
     const mode = result.notificationMode || 'normal';
     const testEmail = result.notificationTestEmail;
-    if (mode === 'none') return;
+    if (mode === 'none') {
+      strapi.log.info(`Notificación omitida (modo none): doc ${result.documentId}`);
+      return;
+    }
 
     const doc = await strapi.documents('api::doc.doc').findOne({
       documentId: result.documentId,
       populate: {
+        notify: true,
         countries: { fields: ['name_sp'] },
         tags: true,
         entity: true,
@@ -104,6 +108,7 @@ module.exports = {
     if ((mode === 'test' || mode === 'both') && testEmail) {
       try {
         await sendDynamicTemplateEmail({ to: testEmail, templateId, dynamicData, customArgs });
+        strapi.log.info(`Email de prueba DOC enviado (${result.documentId}) a ${testEmail}`);
       } catch (err) {
         strapi.log.error('Error enviando email de prueba DOC:', err);
       }
@@ -111,9 +116,16 @@ module.exports = {
     }
 
     if (mode === 'normal' || mode === 'both') {
-      if (!Array.isArray(doc.notify) || doc.notify.length === 0) return;
+      if (!Array.isArray(doc.notify) || doc.notify.length === 0) {
+        strapi.log.info(`Notificación omitida (doc ${result.documentId}): sin notify configurado`);
+        return;
+      }
       const users = await resolveRecipientsByNotify('api::doc.doc', doc.documentId);
-      if (!users.length) return;
+      if (!users.length) {
+        strapi.log.info(`Notificación omitida (doc ${result.documentId}): sin destinatarios`);
+        return;
+      }
+      strapi.log.info(`Enviando notificación DOC (${result.documentId}) a ${users.length} usuarios`);
       for (const user of users) {
         try {
           await sendDynamicTemplateEmail({ to: user.email, templateId, dynamicData, customArgs });

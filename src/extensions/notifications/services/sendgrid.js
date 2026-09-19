@@ -74,8 +74,14 @@ async function sendDynamicTemplateEmail({ to, templateId, dynamicData, customArg
     return;
   }
 
+  // Interruptor solo para pruebas: si EMAIL_OVERRIDE_TO está definido, todo correo sale a esa dirección.
+  const overrideTo = process.env.EMAIL_OVERRIDE_TO;
+  if (overrideTo) {
+    console.warn(`📧 EMAIL_OVERRIDE_TO activo: ${JSON.stringify(to)} -> ${overrideTo}`);
+  }
+
   const msg = {
-    to,
+    to: overrideTo || to,
     from: {
       email: process.env.SENDGRID_FROM_EMAIL,
       name: process.env.SENDGRID_FROM_NAME || 'Portal Brain',

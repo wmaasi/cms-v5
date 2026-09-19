@@ -34,7 +34,7 @@ async function resolveRecipientsByNotify(uid, documentId) {
     },
   });
   if (!item) return [];
-  const notifyKinds = (item.notify || []).map((n) => n.kind);
+  const notifyKinds = [].concat(item.notify || []).map((n) => n.kind);
   if (!notifyKinds.length) return [];
   const sectorIds      = (item.sectors      || []).map((s) => s.id);
   const commissionIds  = (item.commissions  || []).map((c) => c.id);

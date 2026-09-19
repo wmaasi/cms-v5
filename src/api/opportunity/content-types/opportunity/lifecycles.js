@@ -13,13 +13,17 @@ module.exports = {
 
     const mode = result.notificationMode || 'normal';
     const testEmail = result.notificationTestEmail;
-    if (mode === 'none') return;
+    if (mode === 'none') {
+      strapi.log.info(`Notificación omitida (modo none): opportunity ${result.documentId}`);
+      return;
+    }
 
     const templateId = process.env.SENDGRID_TEMPLATE_OPPORTUNITY;
 
     const opportunity = await strapi.documents('api::opportunity.opportunity').findOne({
       documentId: result.documentId,
       populate: {
+        notify: true,
         countries: { fields: ['name_sp'] },
         sectors: true,
         tags: { fields: ['name'] },
@@ -80,6 +84,7 @@ module.exports = {
     if ((mode === 'test' || mode === 'both') && testEmail) {
       try {
         await sendDynamicTemplateEmail({ to: testEmail, templateId, dynamicData, customArgs });
+        strapi.log.info(`Email de prueba OPPORTUNITY enviado (${result.documentId}) a ${testEmail}`);
       } catch (err) {
         strapi.log.error('Error enviando email de prueba para OPPORTUNITY:', err);
       }
@@ -87,9 +92,16 @@ module.exports = {
     }
 
     if (mode === 'normal' || mode === 'both') {
-      if (!Array.isArray(opportunity.notify) || opportunity.notify.length === 0) return;
+      if (!Array.isArray(opportunity.notify) || opportunity.notify.length === 0) {
+        strapi.log.info(`Notificación omitida (opportunity ${result.documentId}): sin notify configurado`);
+        return;
+      }
       const users = await resolveRecipientsByNotify('api::opportunity.opportunity', opportunity.documentId);
-      if (!users.length) return;
+      if (!users.length) {
+        strapi.log.info(`Notificación omitida (opportunity ${result.documentId}): sin destinatarios`);
+        return;
+      }
+      strapi.log.info(`Enviando notificación OPPORTUNITY (${result.documentId}) a ${users.length} usuarios`);
       for (const user of users) {
         try {
           await sendDynamicTemplateEmail({ to: user.email, templateId, dynamicData, customArgs });

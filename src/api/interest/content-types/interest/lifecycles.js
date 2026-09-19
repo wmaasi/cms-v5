@@ -1,9 +1,15 @@
 'use strict';
 const { sendDynamicTemplateEmail } = require('../../../../extensions/notifications/services/sendgrid');
+const { alreadyHandled } = require('../../../../extensions/notifications/services/dedupe');
 
 module.exports = {
   async afterCreate(event) {
     const { result } = event;
+
+    if (alreadyHandled(`interest:${result.documentId}`)) {
+      strapi.log.info(`interest (${result.documentId}): evento duplicado (borrador/publicado), correo omitido.`);
+      return;
+    }
 
     try {
       const interest = await strapi.documents('api::interest.interest').findOne({
@@ -13,16 +19,13 @@ module.exports = {
           buyer: true,
           entity: true,
           brain_user: true,
-          tradeshow: true,
         },
       });
 
       let entity_title = interest.name;
-      if (interest.type === 'Opportunity info' && interest.opportunity) {
+      if (interest.type === 'Opportunity Info' && interest.opportunity) {
         entity_title = interest.opportunity.title;
-      } else if (interest.type === 'Tradeshow info' && interest.tradeshow) {
-        entity_title = interest.tradeshow.name;
-      } else if (interest.type === 'Buyer info' && interest.buyer) {
+      } else if (interest.type === 'Buyer Info' && interest.buyer) {
         entity_title = interest.buyer.commercial_name;
       }
 
@@ -48,7 +51,7 @@ module.exports = {
           brain_user: interest.brain_user?.name || '',
           type: interest.type,
           opportunity: interest.opportunity?.title || '',
-          buyer: interest.buyer?.name || '',
+          buyer: interest.buyer?.commercial_name || '',
           comments: interest.comments || '',
           admin_link: `https://brain.agexport.org/admin/content-manager/collectionType/api::interest.interest/${interest.documentId}`,
         },
