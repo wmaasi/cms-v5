@@ -16,6 +16,14 @@ function uniqUsers(users) {
 /**
  * Obtiene los usuarios que deben recibir la notificación según las reglas del campo `notify`.
  *
+ * Los segmentos sector/commission/committee/user_tags se COMBINAN (OR): un usuario
+ * que califique por cualquiera de ellos entra a la lista.
+ *
+ * entity_type, si está seleccionado, actúa como FILTRO adicional (AND) sobre esa
+ * lista ya combinada: solo se conservan los usuarios cuya entidad tenga uno de los
+ * tipos seleccionados (ej. "Comisión = Cítricos" + "Entity Type = Asociado" envía
+ * solo a los asociados de Cítricos, no a todos los de Cítricos).
+ *
  * @param {string} uid - UID del content-type (api::doc.doc o api::tradeshow.tradeshow)
  * @param {string} documentId - documentId del documento (en v5 es string UUID, no número)
  *
@@ -40,7 +48,7 @@ async function resolveRecipientsByNotify(uid, documentId) {
   const commissionIds  = (item.commissions  || []).map((c) => c.id);
   const committeeIds   = (item.committees   || []).map((c) => c.id);
   const tagIds         = (item.tags         || []).map((t) => t.id);
-  const entityTypeIds  = (item.entity_types || []).map((e) => e.id);
+  const entityTypeNames = (item.entity_types || []).map((e) => e.type).filter(Boolean);
 
   const finalBuckets = [];
 
@@ -93,23 +101,7 @@ async function resolveRecipientsByNotify(uid, documentId) {
   }
 
   // ======================================================
-  // 4. NOTIFICAR POR ENTITY TYPE
-  // ======================================================
-  if (notifyKinds.includes('entity_type') && entityTypeIds.length > 0) {
-    const users = await strapi.documents('api::brain-user.brain-user').findMany({
-      fields: ['id', 'email'],
-      filters: {
-        entity: {
-          entity_types: { id: { $in: entityTypeIds } },
-        },
-      },
-      limit: 100000,
-    });
-    finalBuckets.push(users);
-  }
-  
-  // ======================================================
-  // 5. NOTIFICAR POR USER TAGS
+  // 4. NOTIFICAR POR USER TAGS
   // ======================================================
   if (notifyKinds.includes('user_tags') && tagIds.length > 0) {
     const users = await strapi.documents('api::brain-user.brain-user').findMany({
@@ -123,9 +115,29 @@ async function resolveRecipientsByNotify(uid, documentId) {
   }
 
   // ======================================================
-  // Unificar y deduplicar
+  // Unificar y deduplicar los segmentos combinables (OR)
   // ======================================================
-  const finalList = uniqUsers(finalBuckets.flat());
+  let finalList = uniqUsers(finalBuckets.flat());
+
+  // ======================================================
+  // 5. FILTRAR POR ENTITY TYPE (AND, aplicado al final)
+  // ======================================================
+  if (notifyKinds.includes('entity_type') && entityTypeNames.length > 0 && finalList.length > 0) {
+    const ids = finalList.map((u) => u.id);
+    const allowedUsers = await strapi.documents('api::brain-user.brain-user').findMany({
+      fields: ['id'],
+      filters: {
+        id: { $in: ids },
+        entity: {
+          entity_type: { type: { $in: entityTypeNames } },
+        },
+      },
+      limit: 100000,
+    });
+    const allowedIds = new Set(allowedUsers.map((u) => u.id));
+    finalList = finalList.filter((u) => allowedIds.has(u.id));
+  }
+
   return finalList;
 }
 
