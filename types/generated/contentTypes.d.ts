@@ -643,6 +643,10 @@ export interface ApiBrainUserBrainUser extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    webinar_registrations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::webinar-registration.webinar-registration'
+    >;
   };
 }
 
@@ -2209,6 +2213,99 @@ export interface ApiTradeshowTradeshow extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiWebinarAttendanceWebinarAttendance
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'webinar_attendances';
+  info: {
+    displayName: 'Webinar Attendance';
+    pluralName: 'webinar-attendances';
+    singularName: 'webinar-attendance';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    duration_seconds: Schema.Attribute.Integer;
+    join_time: Schema.Attribute.DateTime;
+    leave_time: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::webinar-attendance.webinar-attendance'
+    > &
+      Schema.Attribute.Private;
+    participant_email: Schema.Attribute.String;
+    participant_name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    source: Schema.Attribute.Enumeration<['webhook', 'report']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    webinar: Schema.Attribute.Relation<'manyToOne', 'api::webinar.webinar'>;
+    webinar_registration: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::webinar-registration.webinar-registration'
+    >;
+    zoom_participant_id: Schema.Attribute.String & Schema.Attribute.Private;
+  };
+}
+
+export interface ApiWebinarRegistrationWebinarRegistration
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'webinar_registrations';
+  info: {
+    displayName: 'Webinar Registration';
+    pluralName: 'webinar-registrations';
+    singularName: 'webinar-registration';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    attended_minutes: Schema.Attribute.Integer;
+    brain_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::brain-user.brain-user'
+    >;
+    cancelled_at: Schema.Attribute.DateTime;
+    confirmation_sent_at: Schema.Attribute.DateTime;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::webinar-registration.webinar-registration'
+    > &
+      Schema.Attribute.Private;
+    post_event_sent_at: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    registered_at: Schema.Attribute.DateTime;
+    registration_status: Schema.Attribute.Enumeration<
+      ['registered', 'cancelled', 'attended', 'no_show']
+    > &
+      Schema.Attribute.DefaultTo<'registered'>;
+    reminder_1d_sent_at: Schema.Attribute.DateTime;
+    reminder_1h_sent_at: Schema.Attribute.DateTime;
+    reminder_3d_sent_at: Schema.Attribute.DateTime;
+    source: Schema.Attribute.Enumeration<['web', 'on_join']> &
+      Schema.Attribute.DefaultTo<'web'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    webinar: Schema.Attribute.Relation<'manyToOne', 'api::webinar.webinar'>;
+    webinar_attendances: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::webinar-attendance.webinar-attendance'
+    >;
+    zoom_join_token: Schema.Attribute.String & Schema.Attribute.Private;
+    zoom_registrant_id: Schema.Attribute.String & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
   collectionName: 'webinars';
   info: {
@@ -2293,6 +2390,14 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     video_url: Schema.Attribute.String;
+    webinar_attendances: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::webinar-attendance.webinar-attendance'
+    >;
+    webinar_registrations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::webinar-registration.webinar-registration'
+    >;
     zoom_passcode: Schema.Attribute.String & Schema.Attribute.Private;
     zoom_sync_error: Schema.Attribute.Text & Schema.Attribute.Private;
     zoom_sync_status: Schema.Attribute.Enumeration<
@@ -2891,6 +2996,8 @@ declare module '@strapi/strapi' {
       'api::subcommittee.subcommittee': ApiSubcommitteeSubcommittee;
       'api::tag.tag': ApiTagTag;
       'api::tradeshow.tradeshow': ApiTradeshowTradeshow;
+      'api::webinar-attendance.webinar-attendance': ApiWebinarAttendanceWebinarAttendance;
+      'api::webinar-registration.webinar-registration': ApiWebinarRegistrationWebinarRegistration;
       'api::webinar.webinar': ApiWebinarWebinar;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

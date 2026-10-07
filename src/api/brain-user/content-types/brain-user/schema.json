@@ -131,6 +131,12 @@
       "relation": "oneToMany",
       "target": "api::brain-user-group.brain-user-group",
       "mappedBy": "brain_user"
+    },
+    "webinar_registrations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::webinar-registration.webinar-registration",
+      "mappedBy": "brain_user"
     }
   }
 }

@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "webinar_attendances",
+  "info": {
+    "singularName": "webinar-attendance",
+    "pluralName": "webinar-attendances",
+    "displayName": "Webinar Attendance"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "webinar": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::webinar.webinar",
+      "inversedBy": "webinar_attendances"
+    },
+    "webinar_registration": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::webinar-registration.webinar-registration",
+      "inversedBy": "webinar_attendances"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "zoom_participant_id": {
+      "type": "string",
+      "private": true
+    },
+    "join_time": {
+      "type": "datetime"
+    },
+    "leave_time": {
+      "type": "datetime"
+    },
+    "duration_seconds": {
+      "type": "integer"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "webhook",
+        "report"
+      ]
+    }
+  }
+}

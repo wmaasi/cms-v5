@@ -132,3 +132,4 @@ build
 app.yaml
 .env2
 src/extensions/user-permissions/firebase-service-account.json
+.env.backup
