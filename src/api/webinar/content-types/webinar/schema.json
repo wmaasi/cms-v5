@@ -117,6 +117,90 @@
       "relation": "manyToMany",
       "target": "api::statistic.statistic",
       "mappedBy": "webinars"
+    },
+    "provider": {
+      "type": "enumeration",
+      "default": "external",
+      "enum": [
+        "external",
+        "zoom"
+      ]
+    },
+    "modality": {
+      "type": "enumeration",
+      "default": "virtual",
+      "enum": [
+        "virtual",
+        "presencial",
+        "hibrido"
+      ]
+    },
+    "access_type": {
+      "type": "enumeration",
+      "default": "free",
+      "enum": [
+        "free",
+        "paid"
+      ]
+    },
+    "event_status": {
+      "type": "enumeration",
+      "default": "scheduled",
+      "enum": [
+        "scheduled",
+        "cancelled",
+        "finished"
+      ]
+    },
+    "zoom_sync_status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "synced",
+        "error"
+      ]
+    },
+    "recording_status": {
+      "type": "enumeration",
+      "default": "none",
+      "enum": [
+        "none",
+        "processing",
+        "available"
+      ]
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "duration_minutes": {
+      "type": "integer"
+    },
+    "capacity": {
+      "type": "integer",
+      "default": 300
+    },
+    "start_datetime": {
+      "type": "datetime"
+    },
+    "registration_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "zoom_webinar_id": {
+      "type": "string",
+      "private": true
+    },
+    "zoom_passcode": {
+      "type": "string",
+      "private": true
+    },
+    "zoom_sync_error": {
+      "type": "text",
+      "private": true
+    },
+    "recording_path": {
+      "type": "string",
+      "private": true
     }
   }
 }

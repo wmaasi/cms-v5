@@ -2221,6 +2221,9 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    access_type: Schema.Attribute.Enumeration<['free', 'paid']> &
+      Schema.Attribute.DefaultTo<'free'>;
+    capacity: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<300>;
     codes: Schema.Attribute.Relation<'manyToMany', 'api::code.code'>;
     commissions: Schema.Attribute.Relation<
       'manyToMany',
@@ -2234,15 +2237,24 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     description: Schema.Attribute.Blocks;
     docs: Schema.Attribute.Relation<'manyToMany', 'api::doc.doc'>;
+    duration_minutes: Schema.Attribute.Integer;
     event_date: Schema.Attribute.Date;
     event_end_time: Schema.Attribute.Time;
     event_start_time: Schema.Attribute.Time;
+    event_status: Schema.Attribute.Enumeration<
+      ['scheduled', 'cancelled', 'finished']
+    > &
+      Schema.Attribute.DefaultTo<'scheduled'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::webinar.webinar'
     > &
       Schema.Attribute.Private;
+    modality: Schema.Attribute.Enumeration<
+      ['virtual', 'presencial', 'hibrido']
+    > &
+      Schema.Attribute.DefaultTo<'virtual'>;
     notificationMode: Schema.Attribute.Enumeration<
       ['none', 'test', 'normal', 'both']
     >;
@@ -2252,10 +2264,21 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
       false
     >;
     organizer: Schema.Attribute.String;
+    price: Schema.Attribute.Decimal;
+    provider: Schema.Attribute.Enumeration<['external', 'zoom']> &
+      Schema.Attribute.DefaultTo<'external'>;
     publishedAt: Schema.Attribute.DateTime;
+    recording_path: Schema.Attribute.String & Schema.Attribute.Private;
+    recording_status: Schema.Attribute.Enumeration<
+      ['none', 'processing', 'available']
+    > &
+      Schema.Attribute.DefaultTo<'none'>;
+    registration_enabled: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
     sectors: Schema.Attribute.Relation<'manyToMany', 'api::sector.sector'>;
     signup_url: Schema.Attribute.String;
     speaker: Schema.Attribute.String;
+    start_datetime: Schema.Attribute.DateTime;
     statistics: Schema.Attribute.Relation<
       'manyToMany',
       'api::statistic.statistic'
@@ -2270,6 +2293,12 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     video_url: Schema.Attribute.String;
+    zoom_passcode: Schema.Attribute.String & Schema.Attribute.Private;
+    zoom_sync_error: Schema.Attribute.Text & Schema.Attribute.Private;
+    zoom_sync_status: Schema.Attribute.Enumeration<
+      ['pending', 'synced', 'error']
+    >;
+    zoom_webinar_id: Schema.Attribute.String & Schema.Attribute.Private;
   };
 }
 
