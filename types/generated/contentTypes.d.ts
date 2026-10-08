@@ -1028,6 +1028,7 @@ export interface ApiCommitteeCommittee extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    webinars: Schema.Attribute.Relation<'manyToMany', 'api::webinar.webinar'>;
   };
 }
 
@@ -2325,6 +2326,10 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
     commissions: Schema.Attribute.Relation<
       'manyToMany',
       'api::commission.commission'
+    >;
+    committees: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::committee.committee'
     >;
     content: Schema.Attribute.Blocks;
     countries: Schema.Attribute.Relation<'manyToMany', 'api::country.country'>;

@@ -213,6 +213,12 @@
       "relation": "oneToMany",
       "target": "api::webinar-attendance.webinar-attendance",
       "mappedBy": "webinar"
+    },
+    "committees": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::committee.committee",
+      "mappedBy": "webinars"
     }
   }
 }
