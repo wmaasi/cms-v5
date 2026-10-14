@@ -11,6 +11,7 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
 
 const { sendDynamicTemplateEmail, blocksToHtml } = require('./extensions/notifications/services/sendgrid');
 const { resolveRecipientsByNotify } = require('./extensions/notifications/services/recipients');
+const { syncBeforePublish } = require('./lib/webinar-sync'); // [Zoom]
 
 console.log('🧪 index.js cargado');
 
@@ -355,6 +356,18 @@ module.exports = {
       strapi.firebaseAdmin = firebaseApp;
       strapi.log.info('✅ Firebase Admin inicializado correctamente');
     }
+
+    // 1.5) [Zoom] Sincronización con Zoom antes de publicar webinars
+    strapi.documents.use(async (context, next) => {
+      if (
+        context.action === 'publish' &&
+        context.contentType?.uid === 'api::webinar.webinar' &&
+        context.params?.documentId
+      ) {
+        await syncBeforePublish(context.params.documentId); // si falla, lanza error y no se publica
+      }
+      return next();
+    });
 
     // 2) Document Service Middleware para notificaciones al publicar
     strapi.documents.use(async (context, next) => {
