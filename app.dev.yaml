@@ -18,10 +18,10 @@ env_variables:
   SENDGRID_FROM_EMAIL: 'brain-contacto@agexport.org.gt'
   SENDGRID_FROM_NAME: 'Portal Brain DEV'
   PUBLIC_SITE_URL: 'https://brain5-site.web.app'
-  ZOOM_ACCOUNT_ID: ''
-  ZOOM_CLIENT_ID: ''
-  ZOOM_SDK_KEY: ''
-  ZOOM_HOST_USER: ''
+  ZOOM_ACCOUNT_ID: 'WjuuxZepRpad_rr54nE7kQ'
+  ZOOM_CLIENT_ID: '0g2rv5LuRP2A6egKzAkYfg'
+  ZOOM_SDK_KEY: 'yq1nvAR5TJ2EANdCWs90yA'
+  ZOOM_HOST_USER: 'zoom17@agexport.org.gt'
 build_env_variables:
   NODE_ENV: 'production'
 beta_settings:
