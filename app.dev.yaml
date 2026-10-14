@@ -1,0 +1,28 @@
+service: brainstrapi-dev
+runtime: nodejs22
+instance_class: F2
+automatic_scaling:
+  min_instances: 0
+  max_instances: 1
+env_variables:
+  HOST: '0.0.0.0'
+  NODE_ENV: 'production'
+  SECRETS_PROFILE: 'dev'
+  DATABASE_CLIENT: 'mysql'
+  DATABASE_NAME: 'brainstrapi_dev'
+  DATABASE_USERNAME: 'strapi_dev'
+  DATABASE_POOL_MIN: '0'
+  DATABASE_POOL_MAX: '2'
+  INSTANCE_CONNECTION_NAME: 'flawless-agency-347915:us-central1:dbbrain'
+  GCS_BUCKET_NAME: 'strapiv5_documents_dev'
+  SENDGRID_FROM_EMAIL: 'brain-contacto@agexport.org.gt'
+  SENDGRID_FROM_NAME: 'Portal Brain DEV'
+  PUBLIC_SITE_URL: 'https://brain5-site.web.app'
+  ZOOM_ACCOUNT_ID: ''
+  ZOOM_CLIENT_ID: ''
+  ZOOM_SDK_KEY: ''
+  ZOOM_HOST_USER: ''
+build_env_variables:
+  NODE_ENV: 'production'
+beta_settings:
+  cloud_sql_instances: 'flawless-agency-347915:us-central1:dbbrain'
