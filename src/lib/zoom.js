@@ -113,6 +113,7 @@ async function addRegistrant(webinarId, { email, firstName, lastName }) {
   return {
     registrantId: r.registrant_id || r.id,
     joinToken: new URL(r.join_url).searchParams.get('tk'),
+    joinUrl: r.join_url,
   };
 }
 

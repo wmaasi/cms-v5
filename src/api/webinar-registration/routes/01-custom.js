@@ -6,6 +6,12 @@ const config = { auth: false, policies: [], middlewares: ['global::firebase-toke
 module.exports = {
   routes: [
     {
+      method: 'GET',
+      path: '/brain-user/webinars/:documentId/registration',
+      handler: 'webinar-registration.status',
+      config,
+    },
+    {
       method: 'POST',
       path: '/brain-user/webinars/:documentId/register',
       handler: 'webinar-registration.register',

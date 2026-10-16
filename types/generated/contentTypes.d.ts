@@ -2303,6 +2303,7 @@ export interface ApiWebinarRegistrationWebinarRegistration
       'api::webinar-attendance.webinar-attendance'
     >;
     zoom_join_token: Schema.Attribute.String & Schema.Attribute.Private;
+    zoom_join_url: Schema.Attribute.Text;
     zoom_registrant_id: Schema.Attribute.String & Schema.Attribute.Private;
   };
 }
@@ -2403,12 +2404,12 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::webinar-registration.webinar-registration'
     >;
-    zoom_passcode: Schema.Attribute.String & Schema.Attribute.Private;
+    zoom_passcode: Schema.Attribute.String;
     zoom_sync_error: Schema.Attribute.Text & Schema.Attribute.Private;
     zoom_sync_status: Schema.Attribute.Enumeration<
       ['pending', 'synced', 'error']
     >;
-    zoom_webinar_id: Schema.Attribute.String & Schema.Attribute.Private;
+    zoom_webinar_id: Schema.Attribute.String;
   };
 }
 

@@ -74,7 +74,7 @@ async function ensureRegistration(webinar, user, source) {
     });
   }
 
-  const { registrantId, joinToken } = await zoom.addRegistrant(webinar.zoom_webinar_id, {
+  const { registrantId, joinToken, joinUrl } = await zoom.addRegistrant(webinar.zoom_webinar_id, {
     email: user.email,
     firstName: user.name || user.email,
     lastName: user.lastName || '-',
@@ -90,6 +90,7 @@ async function ensureRegistration(webinar, user, source) {
       registered_at: now,
       zoom_registrant_id: registrantId,
       zoom_join_token: joinToken,
+      zoom_join_url: joinUrl,
     },
   });
 }
@@ -104,6 +105,14 @@ const publicView = (reg) => ({
 // --- Controlador ---
 
 module.exports = factories.createCoreController(REG, () => ({
+  // Estado de inscripción del usuario en un webinar (status null = no inscrito)
+  async status(ctx) {
+    const user = await getUser(ctx);
+    const webinar = await getWebinar(ctx.params.documentId);
+    const reg = await findRegistration(webinar, user);
+    ctx.body = reg ? publicView(reg) : { status: null, registeredAt: null, cancelledAt: null };
+  },
+
   async register(ctx) {
     const user = await getUser(ctx);
     const webinar = await getWebinar(ctx.params.documentId);
@@ -142,9 +151,9 @@ module.exports = factories.createCoreController(REG, () => ({
     const closes = webinar.end.getTime() + JOIN_AFTER_MIN * 60_000;
     const now = Date.now();
     if (now < opens) {
-       throw new errors.ApplicationError('La sala aún no está abierta', { opensAt: new Date(opens).toISOString() });
+      throw new errors.ApplicationError('La sala aún no está abierta', { opensAt: new Date(opens).toISOString() });
     }
-    if (now > closes) throw new errors.AplicationError('Este webinar ya finalizó');
+    if (now > closes) throw new errors.ApplicationError('Este webinar ya finalizó');
 
     // Si no estaba inscrito, se inscribe en este momento
     const reg = await ensureRegistration(webinar, user, 'on_join');
@@ -156,6 +165,8 @@ module.exports = factories.createCoreController(REG, () => ({
       userName: [user.name, user.lastName].filter(Boolean).join(' ') || user.email,
       userEmail: user.email,
       tk: reg.zoom_join_token || '',
+      // Respaldo para inscripciones hechas antes de guardar el enlace
+      joinUrl: reg.zoom_join_url || `https://zoom.us/w/${webinar.zoom_webinar_id}?tk=${reg.zoom_join_token || ''}`,
     };
   },
 }));

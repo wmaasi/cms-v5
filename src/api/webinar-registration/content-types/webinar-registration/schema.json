@@ -78,6 +78,9 @@
       "relation": "oneToMany",
       "target": "api::webinar-attendance.webinar-attendance",
       "mappedBy": "webinar_registration"
+    },
+    "zoom_join_url": {
+      "type": "text"
     }
   }
 }
