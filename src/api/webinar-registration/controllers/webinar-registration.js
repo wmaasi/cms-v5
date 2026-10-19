@@ -83,8 +83,8 @@ async function ensureRegistration(webinar, user, source) {
   // TODO(correos): confirmación de inscripción
   return strapi.documents(REG).create({
     data: {
-      webinar: { connect: [{ documentId: webinar.documentId, status: 'published' }] },
-      brain_user: { connect: [{ documentId: user.documentId, status: 'published' }] },
+      webinar: { connect: [webinar.documentId] },
+      brain_user: { connect: [user.documentId] },
       registration_status: 'registered',
       source,
       registered_at: now,
