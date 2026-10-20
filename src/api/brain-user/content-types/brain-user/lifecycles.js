@@ -1,10 +1,19 @@
 'use strict';
 
+// Con FIREBASE_USER_SYNC=off (local y dev) no se crean, modifican ni borran
+// cuentas en Firebase. Local y dev comparten el Firebase de producción.
+const syncOff = () => process.env.FIREBASE_USER_SYNC === 'off';
+
 module.exports = {
   async beforeCreate(event) {
     const { data } = event.params;
 
     if (data.uid) return;
+
+    if (syncOff()) {
+      // Sin uid no se puede crear el usuario sin tocar Firebase
+      throw new Error('FIREBASE_SYNC_DISABLED');
+    }
 
     if (!data.email) throw new Error('EMAIL_REQUIRED');
     if (!data.password) throw new Error('PASSWORD_REQUIRED');
@@ -42,6 +51,11 @@ module.exports = {
   async beforeUpdate(event) {
     const { data, where } = event.params;
 
+    if (syncOff()) {
+      if (data.password) delete data.password; // nunca guardar password en Strapi
+      return;
+    }
+
     const firebaseAdmin = strapi.firebaseAdmin;
     if (!firebaseAdmin) throw new Error('FIREBASE_NOT_INITIALIZED');
 
@@ -78,6 +92,8 @@ module.exports = {
   },
 
   async beforeDelete(event) {
+    if (syncOff()) return; // nunca borrar cuentas de Firebase desde local o dev
+
     const { where } = event.params;
 
     const firebaseAdmin = strapi.firebaseAdmin;

@@ -21,7 +21,8 @@ env_variables:
   ZOOM_ACCOUNT_ID: 'WjuuxZepRpad_rr54nE7kQ'
   ZOOM_CLIENT_ID: '0g2rv5LuRP2A6egKzAkYfg'
   ZOOM_SDK_KEY: 'yq1nvAR5TJ2EANdCWs90yA'
-  ZOOM_HOST_USER: 'zoom17@agexport.org.gt'
+  ZOOM_HOST_USER: 'zoom17@agexport.org.gt'ç
+  FIREBASE_USER_SYNC: 'off'
 build_env_variables:
   NODE_ENV: 'production'
 beta_settings:
