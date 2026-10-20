@@ -583,7 +583,7 @@ export interface ApiBrainUserBrainUser extends Struct.CollectionTypeSchema {
     singularName: 'brain-user';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     active: Schema.Attribute.Boolean;
