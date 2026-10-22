@@ -202,12 +202,6 @@
       "type": "string",
       "private": true
     },
-    "webinar_registrations": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::webinar-registration.webinar-registration",
-      "mappedBy": "webinar"
-    },
     "webinar_attendances": {
       "type": "relation",
       "relation": "oneToMany",
