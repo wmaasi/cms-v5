@@ -10,6 +10,7 @@ const USER = 'api::brain-user.brain-user';
 
 const JOIN_BEFORE_MIN = 30; // la sala abre 30 min antes
 const JOIN_AFTER_MIN = 30;  // y cierra 30 min después del final programado
+const PENDING_STALE_MS = 2 * 60_000; // una inscripción "pending" de más de 2 min se considera abandonada
 
 const ACTIVE = ['registered', 'attended'];
 
@@ -42,57 +43,126 @@ const findRegistration = (webinar, user) =>
     },
   });
 
-// Inscribe o reactiva. Se usa desde /register y desde /join (source = on_join).
-async function ensureRegistration(webinar, user, source) {
-  const existing = await findRegistration(webinar, user);
+const isStalePending = (reg) =>
+  reg.registration_status === 'pending' &&
+  Date.now() - new Date(reg.updatedAt).getTime() > PENDING_STALE_MS;
+
+// Evita que dos peticiones simultáneas del mismo usuario al mismo webinar
+// lleguen a Zoom: la segunda espera y recibe el resultado de la primera.
+const inFlight = new Map();
+
+function ensureRegistration(webinar, user, source) {
+  const key = `${webinar.documentId}:${user.documentId}`;
+  if (inFlight.has(key)) return inFlight.get(key);
+  const task = doEnsureRegistration(webinar, user, source).finally(() => inFlight.delete(key));
+  inFlight.set(key, task);
+  return task;
+}
+
+// Orden: primero se reserva en Strapi ("pending"), luego Zoom.
+// Si Zoom falla, se deshace la reserva; así nunca queda un inscrito en Zoom sin registro en Brain.
+async function doEnsureRegistration(webinar, user, source) {
+  let existing = await findRegistration(webinar, user);
   if (existing && ACTIVE.includes(existing.registration_status)) return existing;
+
+  if (existing && existing.registration_status === 'pending') {
+    if (!isStalePending(existing)) {
+      throw new errors.ApplicationError('Tu inscripción está en proceso. Intenta de nuevo en unos segundos.');
+    }
+    // Reserva abandonada (por ejemplo, el servidor se reinició a mitad): se descarta y se reintenta
+    await strapi.documents(REG).delete({ documentId: existing.documentId });
+    existing = null;
+  }
 
   if (webinar.event_status !== 'scheduled') throw new errors.ApplicationError('Este webinar no está disponible');
   if (webinar.registration_enabled === false) throw new errors.ApplicationError('Las inscripciones están cerradas');
   if (Date.now() > webinar.end.getTime()) throw new errors.ApplicationError('Este webinar ya finalizó');
 
   const taken = await strapi.documents(REG).count({
-    filters: { webinar: { documentId: webinar.documentId }, registration_status: { $in: ACTIVE } },
+    filters: {
+      webinar: { documentId: webinar.documentId },
+      registration_status: { $in: [...ACTIVE, 'pending'] },
+    },
   });
   if (webinar.capacity && taken >= webinar.capacity) {
     throw new errors.ApplicationError('El cupo de este webinar está lleno');
   }
 
-  const now = new Date().toISOString();
-
   if (existing) {
     // Había cancelado: se reactiva la misma inscripción
-    await zoom.setRegistrantStatus(
-      webinar.zoom_webinar_id,
-      { registrantId: existing.zoom_registrant_id, email: user.email },
-      'approve',
-    );
+    await strapi.documents(REG).update({
+      documentId: existing.documentId,
+      data: { registration_status: 'pending' },
+    });
+    try {
+      await zoom.setRegistrantStatus(
+        webinar.zoom_webinar_id,
+        { registrantId: existing.zoom_registrant_id, email: user.email },
+        'approve',
+      );
+    } catch (err) {
+      await strapi.documents(REG).update({
+        documentId: existing.documentId,
+        data: { registration_status: 'cancelled' },
+      });
+      throw err;
+    }
     // TODO(correos): confirmación de inscripción
     return strapi.documents(REG).update({
       documentId: existing.documentId,
-      data: { registration_status: 'registered', registered_at: now, cancelled_at: null, source },
+      data: {
+        registration_status: 'registered',
+        registered_at: new Date().toISOString(),
+        cancelled_at: null,
+        source,
+      },
     });
   }
 
-  const { registrantId, joinToken, joinUrl } = await zoom.addRegistrant(webinar.zoom_webinar_id, {
-    email: user.email,
-    firstName: user.name || user.email,
-    lastName: user.lastName || '-',
-  });
-
-  // TODO(correos): confirmación de inscripción
-  return strapi.documents(REG).create({
+  // 1) Reserva en Strapi
+  const reserved = await strapi.documents(REG).create({
     data: {
       webinar: { connect: [{ documentId: webinar.documentId, status: 'published' }] },
       brain_user: { connect: [{ documentId: user.documentId, status: 'published' }] },
-      registration_status: 'registered',
+      registration_status: 'pending',
       source,
-      registered_at: now,
-      zoom_registrant_id: registrantId,
-      zoom_join_token: joinToken,
-      zoom_join_url: joinUrl,
     },
   });
+
+  // 2) Inscripción en Zoom; si falla, se deshace la reserva
+  let zoomReg;
+  try {
+    zoomReg = await zoom.addRegistrant(webinar.zoom_webinar_id, {
+      email: user.email,
+      firstName: user.name || user.email,
+      lastName: user.lastName || '-',
+    });
+  } catch (err) {
+    await strapi.documents(REG).delete({ documentId: reserved.documentId });
+    throw err;
+  }
+
+  // 3) Confirmar la reserva con los datos de Zoom
+  try {
+    // TODO(correos): confirmación de inscripción
+    return await strapi.documents(REG).update({
+      documentId: reserved.documentId,
+      data: {
+        registration_status: 'registered',
+        registered_at: new Date().toISOString(),
+        zoom_registrant_id: zoomReg.registrantId,
+        zoom_join_token: zoomReg.joinToken,
+        zoom_join_url: zoomReg.joinUrl,
+      },
+    });
+  } catch (err) {
+    // Muy poco probable; se deshace todo para no dejar estados a medias
+    await zoom
+      .setRegistrantStatus(webinar.zoom_webinar_id, { registrantId: zoomReg.registrantId, email: user.email }, 'cancel')
+      .catch((e) => strapi.log.error(`[webinar-registration] No se pudo cancelar en Zoom: ${e.message}`));
+    await strapi.documents(REG).delete({ documentId: reserved.documentId }).catch(() => {});
+    throw err;
+  }
 }
 
 // Respuesta mínima para el frontend: nunca incluye datos de Zoom

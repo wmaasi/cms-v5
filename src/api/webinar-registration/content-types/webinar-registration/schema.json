@@ -29,7 +29,8 @@
         "registered",
         "cancelled",
         "attended",
-        "no_show"
+        "no_show",
+        "pending"
       ]
     },
     "source": {

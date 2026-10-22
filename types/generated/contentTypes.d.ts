@@ -2286,7 +2286,7 @@ export interface ApiWebinarRegistrationWebinarRegistration
     publishedAt: Schema.Attribute.DateTime;
     registered_at: Schema.Attribute.DateTime;
     registration_status: Schema.Attribute.Enumeration<
-      ['registered', 'cancelled', 'attended', 'no_show']
+      ['registered', 'cancelled', 'attended', 'no_show', 'pending']
     > &
       Schema.Attribute.DefaultTo<'registered'>;
     reminder_1d_sent_at: Schema.Attribute.DateTime;
