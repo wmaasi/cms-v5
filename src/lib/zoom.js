@@ -53,12 +53,21 @@ async function request(path, { method = 'GET', body, query } = {}) {
 // --- Webinars ---
 
 // Zoom ignora registrants_confirmation_email al crear; se aplica después y se verifica.
+// Ajustes obligatorios en todos los webinars de Brain. Zoom ignora algunos al crear,
+// así que se aplican con una actualización posterior y se verifican.
 async function disableZoomEmails(webinarId) {
-  const settings = { registrants_confirmation_email: false, registrants_email_notification: false };
+  const settings = {
+    registrants_confirmation_email: false,
+    registrants_email_notification: false,
+    allow_multiple_devices: false, // cada inscrito entra desde un solo dispositivo
+  };
   await request(`/webinars/${webinarId}`, { method: 'PATCH', body: { settings } });
   const w = await request(`/webinars/${webinarId}`);
   if (w.settings?.registrants_confirmation_email || w.settings?.registrants_email_notification) {
     throw new Error('[zoom] No se pudieron desactivar los correos de Zoom para este webinar');
+  }
+  if (w.settings?.allow_multiple_devices) {
+    throw new Error('[zoom] No se pudo limitar el ingreso a un solo dispositivo en este webinar');
   }
 }
 
