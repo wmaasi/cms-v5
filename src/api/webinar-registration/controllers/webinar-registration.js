@@ -3,6 +3,7 @@
 const { factories } = require('@strapi/strapi');
 const { errors } = require('@strapi/utils');
 const zoom = require('../../../lib/zoom');
+const emails = require('../../../lib/webinar-emails');
 
 const REG = 'api::webinar-registration.webinar-registration';
 const WEBINAR = 'api::webinar.webinar';
@@ -46,6 +47,21 @@ const findRegistration = (webinar, user) =>
 const isStalePending = (reg) =>
   reg.registration_status === 'pending' &&
   Date.now() - new Date(reg.updatedAt).getTime() > PENDING_STALE_MS;
+
+// Correo de confirmación fuera de la petición: un fallo de correo no afecta la inscripción
+function queueConfirmation(webinar, user, regDocumentId) {
+  setImmediate(async () => {
+    try {
+      await emails.sendRegistrationConfirmed(webinar, user);
+      await strapi.documents(REG).update({
+        documentId: regDocumentId,
+        data: { confirmation_sent_at: new Date().toISOString() },
+      });
+    } catch (err) {
+      strapi.log.error(`[webinar-emails] Confirmación a ${user.email}: ${err.message}`);
+    }
+  });
+}
 
 // Evita que dos peticiones simultáneas del mismo usuario al mismo webinar
 // lleguen a Zoom: la segunda espera y recibe el resultado de la primera.
@@ -107,8 +123,7 @@ async function doEnsureRegistration(webinar, user, source) {
       });
       throw err;
     }
-    // TODO(correos): confirmación de inscripción
-    return strapi.documents(REG).update({
+    const reactivated = await strapi.documents(REG).update({
       documentId: existing.documentId,
       data: {
         registration_status: 'registered',
@@ -117,6 +132,8 @@ async function doEnsureRegistration(webinar, user, source) {
         source,
       },
     });
+    queueConfirmation(webinar, user, existing.documentId);
+    return reactivated;
   }
 
   // 1) Reserva en Strapi
@@ -143,9 +160,9 @@ async function doEnsureRegistration(webinar, user, source) {
   }
 
   // 3) Confirmar la reserva con los datos de Zoom
+  let confirmed;
   try {
-    // TODO(correos): confirmación de inscripción
-    return await strapi.documents(REG).update({
+    confirmed = await strapi.documents(REG).update({
       documentId: reserved.documentId,
       data: {
         registration_status: 'registered',
@@ -163,6 +180,9 @@ async function doEnsureRegistration(webinar, user, source) {
     await strapi.documents(REG).delete({ documentId: reserved.documentId }).catch(() => {});
     throw err;
   }
+
+  queueConfirmation(webinar, user, reserved.documentId);
+  return confirmed;
 }
 
 // Respuesta mínima para el frontend: nunca incluye datos de Zoom
@@ -171,6 +191,14 @@ const publicView = (reg) => ({
   registeredAt: reg.registered_at,
   cancelledAt: reg.cancelled_at,
 });
+
+// Ventanas de recordatorio (tiempo que falta para el inicio)
+const HOUR = 3_600_000;
+const REMINDER_PLAN = [
+  { kind: '3d', field: 'reminder_3d_sent_at', from: 48 * HOUR, to: 72 * HOUR },
+  { kind: '1d', field: 'reminder_1d_sent_at', from: 12 * HOUR, to: 24 * HOUR },
+  { kind: '1h', field: 'reminder_1h_sent_at', from: 0, to: 75 * 60_000 },
+];
 
 // --- Controlador ---
 
@@ -207,7 +235,11 @@ module.exports = factories.createCoreController(REG, () => ({
       documentId: reg.documentId,
       data: { registration_status: 'cancelled', cancelled_at: new Date().toISOString() },
     });
-    // TODO(correos): confirmación de cancelación
+    setImmediate(() =>
+      emails.sendRegistrationCancelled(webinar, user).catch((err) =>
+        strapi.log.error(`[webinar-emails] Cancelación a ${user.email}: ${err.message}`),
+      ),
+    );
     ctx.body = publicView(updated);
   },
 
@@ -238,5 +270,53 @@ module.exports = factories.createCoreController(REG, () => ({
       // Respaldo para inscripciones hechas antes de guardar el enlace
       joinUrl: reg.zoom_join_url || `https://zoom.us/w/${webinar.zoom_webinar_id}?tk=${reg.zoom_join_token || ''}`,
     };
+  },
+
+  // Recordatorios 3 días, 1 día y 1 hora antes. La llama Cloud Scheduler cada 15 minutos.
+  async runReminders(ctx) {
+    const secret = process.env.CRON_SECRET;
+    if (!secret || ctx.get('X-Cron-Secret') !== secret) {
+      throw new errors.UnauthorizedError('No autorizado');
+    }
+
+    const now = Date.now();
+    const summary = {};
+
+    for (const plan of REMINDER_PLAN) {
+      const regs = await strapi.documents(REG).findMany({
+        status: 'published',
+        filters: {
+          registration_status: 'registered',
+          [plan.field]: { $null: true },
+          webinar: {
+            event_status: 'scheduled',
+            start_datetime: {
+              $gt: new Date(now + plan.from).toISOString(),
+              $lte: new Date(now + plan.to).toISOString(),
+            },
+          },
+        },
+        populate: { webinar: true, brain_user: { fields: ['email', 'name', 'lastName'] } },
+        limit: 1000,
+      });
+
+      let sent = 0;
+      for (const reg of regs) {
+        if (!reg.brain_user?.email || !reg.webinar) continue;
+        try {
+          await emails.sendReminder(reg.webinar, reg.brain_user, plan.kind);
+          await strapi.documents(REG).update({
+            documentId: reg.documentId,
+            data: { [plan.field]: new Date().toISOString() },
+          });
+          sent++;
+        } catch (err) {
+          strapi.log.error(`[webinar-reminders] ${plan.kind} a ${reg.brain_user.email}: ${err.message}`);
+        }
+      }
+      summary[plan.kind] = { pendientes: regs.length, enviados: sent };
+    }
+
+    ctx.body = summary;
   },
 }));

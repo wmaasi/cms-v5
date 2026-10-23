@@ -2,6 +2,7 @@
 
 const { errors } = require('@strapi/utils');
 const zoom = require('./zoom');
+const emails = require('./webinar-emails');
 
 const UID = 'api::webinar.webinar';
 
@@ -56,6 +57,8 @@ async function syncBeforePublish(documentId) {
     durationMinutes: draft.duration_minutes,
   };
 
+  let afterPublish = null; // correos que se envían cuando la publicación terminó bien
+
   const data = {};
 
   try {
@@ -66,7 +69,7 @@ async function syncBeforePublish(documentId) {
         } catch (err) {
           if (err.status !== 404) throw err; // si ya no existe en Zoom, se da por cancelado
         }
-        // TODO(correos): avisar la cancelación a los inscritos
+        afterPublish = () => emails.sendEventCancelled({ ...draft, ...data });
       }
     } else if (!draft.zoom_webinar_id) {
       const created = await zoom.createWebinar(zoomData);
@@ -76,7 +79,7 @@ async function syncBeforePublish(documentId) {
       await zoom.updateWebinar(draft.zoom_webinar_id, zoomData);
       const previousStart = published?.start_datetime ? new Date(published.start_datetime).getTime() : null;
       if (previousStart && previousStart !== start.getTime()) {
-        // TODO(correos): avisar el cambio de horario a los inscritos
+        afterPublish = () => emails.sendScheduleChanged({ ...draft, ...data });
       }
     }
   } catch (err) {
@@ -100,6 +103,7 @@ async function syncBeforePublish(documentId) {
 
   // Se guarda en el borrador; la publicación que sigue lo lleva a la versión publicada
   await strapi.documents(UID).update({ documentId, data });
+  return afterPublish;
 }
 
 module.exports = { syncBeforePublish };

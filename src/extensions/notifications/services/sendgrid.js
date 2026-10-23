@@ -60,24 +60,34 @@ function blocksToHtml(blocks = []) {
   }).join('');
 }
 
+// Fuera de producción (local o el servicio de dev) nunca se escribe a usuarios reales:
+// sin EMAIL_OVERRIDE_TO no se envía nada.
+const isNonProduction = () =>
+  process.env.SECRETS_PROFILE === 'dev' || process.env.NODE_ENV !== 'production';
+
 /**
  * Envía un correo usando una Dynamic Template de SendGrid.
  *
  * @param {Object} opts
  * @param {string} opts.to - Correo destinatario
- * @param {string} opts.templateId - ID de la plantilla dinámica (Doc o Tradeshow)
+ * @param {string} opts.templateId - ID de la plantilla dinámica
  * @param {Object} opts.dynamicData - Datos dinámicos para la plantilla
+ * @param {Object} [opts.customArgs] - Datos de seguimiento
+ * @param {Array}  [opts.attachments] - Adjuntos: [{ content (base64), filename, type, disposition }]
  */
-async function sendDynamicTemplateEmail({ to, templateId, dynamicData, customArgs }) {
+async function sendDynamicTemplateEmail({ to, templateId, dynamicData, customArgs, attachments }) {
   if (!templateId) {
     console.warn('sendDynamicTemplateEmail: templateId no definido');
     return;
   }
 
-  // Interruptor solo para pruebas: si EMAIL_OVERRIDE_TO está definido, todo correo sale a esa dirección.
+  // Interruptor para pruebas: si EMAIL_OVERRIDE_TO está definido, todo correo sale a esa dirección.
   const overrideTo = process.env.EMAIL_OVERRIDE_TO;
   if (overrideTo) {
     console.warn(`📧 EMAIL_OVERRIDE_TO activo: ${JSON.stringify(to)} -> ${overrideTo}`);
+  } else if (isNonProduction()) {
+    console.warn(`📧 Envío omitido a ${JSON.stringify(to)}: entorno de pruebas sin EMAIL_OVERRIDE_TO`);
+    return;
   }
 
   const msg = {
@@ -90,6 +100,7 @@ async function sendDynamicTemplateEmail({ to, templateId, dynamicData, customArg
     dynamic_template_data: dynamicData || {},
     custom_args: customArgs || {},
   };
+  if (Array.isArray(attachments) && attachments.length) msg.attachments = attachments;
 
   try {
     await sgMail.send(msg);

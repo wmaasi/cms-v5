@@ -15,14 +15,16 @@ env_variables:
   DATABASE_POOL_MAX: '2'
   INSTANCE_CONNECTION_NAME: 'flawless-agency-347915:us-central1:dbbrain'
   GCS_BUCKET_NAME: 'strapiv5_documents_dev'
+  EMAIL_OVERRIDE_TO: 'william.maas@4thwave.solutions'
   SENDGRID_FROM_EMAIL: 'brain-contacto@agexport.org.gt'
   SENDGRID_FROM_NAME: 'Portal Brain DEV'
-  PUBLIC_SITE_URL: 'https://brain5-site.web.app'
+  PUBLIC_SITE_URL: 'https://brainz-site.web.app'
   ZOOM_ACCOUNT_ID: 'WjuuxZepRpad_rr54nE7kQ'
   ZOOM_CLIENT_ID: '0g2rv5LuRP2A6egKzAkYfg'
   ZOOM_SDK_KEY: 'yq1nvAR5TJ2EANdCWs90yA'
   ZOOM_HOST_USER: 'zoom17@agexport.org.gt'
   FIREBASE_USER_SYNC: 'off'
+  SENDGIRD_TEMPLATE_WEBINAR_NOTICE: 'd-11975e38742348088d42ad83f6937361'
 build_env_variables:
   NODE_ENV: 'production'
 beta_settings:

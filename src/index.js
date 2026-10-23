@@ -357,14 +357,21 @@ module.exports = {
       strapi.log.info('✅ Firebase Admin inicializado correctamente');
     }
 
-    // 1.5) [Zoom] Sincronización con Zoom antes de publicar webinars
+    // 1.5) [Zoom] Sincronización con Zoom antes de publicar webinars; correos después de publicar
     strapi.documents.use(async (context, next) => {
       if (
         context.action === 'publish' &&
         context.contentType?.uid === 'api::webinar.webinar' &&
         context.params?.documentId
       ) {
-        await syncBeforePublish(context.params.documentId); // si falla, lanza error y no se publica
+        const afterPublish = await syncBeforePublish(context.params.documentId); // si falla, no se publica
+        const result = await next();
+        if (afterPublish) {
+          setImmediate(() =>
+            afterPublish().catch((err) => strapi.log.error(`[webinar-emails] ${err.message}`)),
+          );
+        }
+        return result;
       }
       return next();
     });

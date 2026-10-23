@@ -31,10 +31,12 @@ const PROFILES = {
     ADMIN_JWT_SECRET:       'brainstrapi-dev-admin-jwt-secret',
     TRANSFER_TOKEN_SALT:    'brainstrapi-dev-transfer-token-salt',
     JWT_SECRET:             'brainstrapi-dev-jwt-secret',
+    SENDGRID_API_KEY:       'brainstrapi-sendgrid-api-key',
+    CRON_SECRET:            'brainstrapi-cron-secret',
     FIREBASE_SERVICE_ACCOUNT_JSON: 'brainstrapi-firebase-sa',
     ZOOM_CLIENT_SECRET:     'zoom-s2s-client-secret',
     ZOOM_SDK_SECRET:        'zoom-sdk-secret',
-    // Sin SENDGRID_API_KEY, CRON_SECRET ni CRM_API_PASSWORD a propósito
+    // Sin CRON_SECRET ni CRM_API_PASSWORD a propósito. SendGrid solo con EMAIL_OVERRIDE_TO activo.
   },
 };
 
