@@ -24,7 +24,7 @@ env_variables:
   ZOOM_SDK_KEY: 'yq1nvAR5TJ2EANdCWs90yA'
   ZOOM_HOST_USER: 'zoom17@agexport.org.gt'
   FIREBASE_USER_SYNC: 'off'
-  SENDGIRD_TEMPLATE_WEBINAR_NOTICE: 'd-11975e38742348088d42ad83f6937361'
+  SENDGRID_TEMPLATE_WEBINAR_NOTICE: 'd-11975e38742348088d42ad83f6937361'
 build_env_variables:
   NODE_ENV: 'production'
 beta_settings:
