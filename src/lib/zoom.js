@@ -134,6 +134,22 @@ async function setRegistrantStatus(webinarId, { registrantId, email }, action) {
   });
 }
 
+// --- Reportes ---
+
+// Participantes de la última sesión de un webinar (disponible unos minutos después de terminar)
+async function getWebinarParticipantsReport(webinarId) {
+  const all = [];
+  let nextPageToken = '';
+  do {
+    const data = await request(`/report/webinars/${webinarId}/participants`, {
+      query: { page_size: 300, ...(nextPageToken ? { next_page_token: nextPageToken } : {}) },
+    });
+    all.push(...(data?.participants || []));
+    nextPageToken = data?.next_page_token || '';
+  } while (nextPageToken);
+  return all;
+}
+
 // --- Firma del Meeting SDK (role 0 = asistente) ---
 
 function sdkSignature(webinarId) {
@@ -156,4 +172,5 @@ module.exports = {
   setRegistrantStatus,
   sdkSignature,
   TIMEZONE,
+  getWebinarParticipantsReport,
 };

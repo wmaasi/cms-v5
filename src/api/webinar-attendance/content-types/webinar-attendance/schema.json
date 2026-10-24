@@ -13,9 +13,8 @@
   "attributes": {
     "webinar": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::webinar.webinar",
-      "inversedBy": "webinar_attendances"
+      "relation": "oneToOne",
+      "target": "api::webinar.webinar"
     },
     "webinar_registration": {
       "type": "relation",

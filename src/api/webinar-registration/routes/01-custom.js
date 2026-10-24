@@ -29,11 +29,11 @@ module.exports = {
       handler: 'webinar-registration.join',
       config,
     },
-    // Recordatorios: la llama Cloud Scheduler con el encabezado X-Cron-Secret
+    // Tareas programadas (recordatorios y conciliación de asistencia). La llama Cloud Scheduler.
     {
       method: 'POST',
-      path: '/webinar-reminders/run',
-      handler: 'webinar-registration.runReminders',
+      path: '/webinar-jobs/run',
+      handler: 'webinar-registration.runJobs',
       config: { auth: false, policies: [], middlewares: [] },
     },
   ],

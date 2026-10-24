@@ -4,6 +4,7 @@ const { factories } = require('@strapi/strapi');
 const { errors } = require('@strapi/utils');
 const zoom = require('../../../lib/zoom');
 const emails = require('../../../lib/webinar-emails');
+const attendance = require('../../../lib/webinar-attendance');
 
 const REG = 'api::webinar-registration.webinar-registration';
 const WEBINAR = 'api::webinar.webinar';
@@ -273,7 +274,7 @@ module.exports = factories.createCoreController(REG, () => ({
   },
 
   // Recordatorios 3 días, 1 día y 1 hora antes. La llama Cloud Scheduler cada 15 minutos.
-  async runReminders(ctx) {
+  async runJobs(ctx) {
     const secret = process.env.CRON_SECRET;
     if (!secret || ctx.get('X-Cron-Secret') !== secret) {
       throw new errors.UnauthorizedError('No autorizado');
@@ -317,6 +318,7 @@ module.exports = factories.createCoreController(REG, () => ({
       summary[plan.kind] = { pendientes: regs.length, enviados: sent };
     }
 
-    ctx.body = summary;
+    const asistencia = await attendance.reconcileDue();
+    ctx.body = { recordatorios: summary, asistencia };
   },
 }));

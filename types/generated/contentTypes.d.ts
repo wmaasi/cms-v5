@@ -2245,7 +2245,7 @@ export interface ApiWebinarAttendanceWebinarAttendance
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    webinar: Schema.Attribute.Relation<'manyToOne', 'api::webinar.webinar'>;
+    webinar: Schema.Attribute.Relation<'oneToOne', 'api::webinar.webinar'>;
     webinar_registration: Schema.Attribute.Relation<
       'manyToOne',
       'api::webinar-registration.webinar-registration'
@@ -2396,10 +2396,6 @@ export interface ApiWebinarWebinar extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     video_url: Schema.Attribute.String;
-    webinar_attendances: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::webinar-attendance.webinar-attendance'
-    >;
     zoom_passcode: Schema.Attribute.String;
     zoom_sync_error: Schema.Attribute.Text & Schema.Attribute.Private;
     zoom_sync_status: Schema.Attribute.Enumeration<

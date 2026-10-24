@@ -36,6 +36,7 @@ const PROFILES = {
     FIREBASE_SERVICE_ACCOUNT_JSON: 'brainstrapi-firebase-sa',
     ZOOM_CLIENT_SECRET:     'zoom-s2s-client-secret',
     ZOOM_SDK_SECRET:        'zoom-sdk-secret',
+    ZOOM_WEBHOOK_SECRET:    'zoom-webhook-secret',
     // Sin CRON_SECRET ni CRM_API_PASSWORD a propósito. SendGrid solo con EMAIL_OVERRIDE_TO activo.
   },
 };

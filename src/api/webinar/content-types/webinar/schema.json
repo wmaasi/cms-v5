@@ -202,12 +202,6 @@
       "type": "string",
       "private": true
     },
-    "webinar_attendances": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::webinar-attendance.webinar-attendance",
-      "mappedBy": "webinar"
-    },
     "committees": {
       "type": "relation",
       "relation": "manyToMany",
