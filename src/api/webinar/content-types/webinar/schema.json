@@ -187,12 +187,10 @@
       "default": true
     },
     "zoom_webinar_id": {
-      "type": "string",
-      "private": true
+      "type": "string"
     },
     "zoom_passcode": {
-      "type": "string",
-      "private": true
+      "type": "string"
     },
     "zoom_sync_error": {
       "type": "text",

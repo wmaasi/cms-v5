@@ -23,6 +23,9 @@ const PROFILES = {
     CRON_SECRET:            'brainstrapi-cron-secret',
     CRM_API_PASSWORD:       'brainstrapi-crm-api-password',
     FIREBASE_SERVICE_ACCOUNT_JSON: 'brainstrapi-firebase-sa',
+    ZOOM_CLIENT_SECRET:     'zoom-s2s-client-secret',
+    ZOOM_SDK_SECRET:        'zoom-sdk-secret',
+    ZOOM_WEBHOOK_SECRET:    'zoom-webhook-secret',
   },
   dev: {
     DATABASE_PASSWORD:     'brainstrapi-dev-database-password',
